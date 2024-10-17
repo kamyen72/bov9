@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+  <style type="text/css">
+    button {background: orange;}
+    body {font-size: 16px;}
+    td {
+      padding-left: 5px;
+      padding-right: 5px;
+      border-style: solid;
+      border-width: 1px;
+    }
+    .boldcell {
+      font-weight: 900;
+      background-color: lightblue;
+    }
+  </style>
+
+  <script>
+    $(document).ready(function(){
+      // let objsLottery = [];
+    }
+  </script>
+
+  <script>
+    const objsLottery = [];
+    var TOver = 0;
+    var Pending = 0;
+    var AllLost = 0;
+    var All4dWin = 0;
+    var Allnon4dWin = 0;
+    var WL = 0;
+    var Agent_WL = 0;
+    var Com_WL = 0;
+
+    function GetLotteryTypes(ds, de){
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetLotteryTypeSummaryLevel",
+            data: JSON.stringify({ "dateStart": ds, "dateEnd": de }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              var maxcount = response.length;
+              alert(maxcount);
+
+              for (let i = 0; i < response.length; i++) {
+                var r = response[i];
+                var robj = {};
+                robj.LotteryTypeID = r.LotteryTypeID;
+                robj.LotteryTypeName = r.LotteryTypeName;
+                robj.TOVer = 0;
+                robj.Pending =  0;
+                robj.AllLost =  0;
+                robj.All4dWin =  0;
+                robj.Allnon4dWin =  0;
+                robj.WL =  0;
+                robj.Agent_WL =  0;
+                robj.Com_WL =  0;
+
+                GetCalcFields(ds, de, r.LotteryTypeID, i, robj);
+              }
+
+              if (i == response.length - 1) {
+                readList();
+              }
+
+              console.log(document.getElementById("jsonLottery").innerText);
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
+    }
+  </script>
+
+  <script>
+    function testTransX(){
+      alert("test transx");
+      var ds = document.getElementById("dateStart").value;
+      var de = document.getElementById("dateEnd").value;
+
+      document.getElementById("result").innerHTML = "<img src='http://localhost:5106/clock.gif' />";
+
+      GetLotteryTypes(ds, de);
+    }
+  </script>
+
+  <script>
+    function formatcommadummy(mynum) {
+      if (mynum == "null" || mynum == null) {
+             alert("Null value found here!!!");
+      }
+
+      var numstr = mynum.toString();
+      outstr = numstr;
+      return outstr;
+    }
+
+  </script>
+
+  <script>
+      function padfront(_new, me) {
+          var outstr = _new + me;
+          return outstr;
+      }
+  </script>
+
+  <script>
+      function formatcomma(mynum) {
+          if (mynum == "null" || mynum == null) {
+             alert("Null value found here!!!");
+          }
+
+          var numstr = mynum.toString();
+
+          // alert(numstr);
+
+          var negfactor = -1;
+          var isnegative = numstr.indexOf("-");
+          if (isnegative == -1) {
+              negfactor = 1;
+          }
+          numstr = numstr.replaceAll("-", "");
+
+          var numlen = numstr.length;
+          numstr = numstr.replaceAll(" ", "");
+          var decimalpoint = numstr.indexOf(".");
+          if (decimalpoint == -1) {
+              numstr = numstr + ".00";
+              decimalpoint = numstr.indexOf(".");
+          }
+          
+          numlen = numstr.length;
+          var newstr = "";
+          var decstr = numstr.substr(decimalpoint, numlen);
+          var intpart = numstr.substr(0, decimalpoint);
+
+          var balstr = "";
+          var outstr = "";
+          var threelen = 0;
+          var outstr = ""
+          var tail = "";
+          var head = "";
+          var oritail = "";
+          var ballen = 0;
+          var headlen = 0;
+          var demostr = "";
+
+          oritail = tail;
+          outstr = head + "--" + oritail;
+          balstr = head;
+
+          for (let i = 0; i < 20; i++) {
+              if (decimalpoint == -1) {
+                  oritail = numstr;
+                  break;
+              }
+              else if (decimalpoint != -1 && intpart.length <= 3) {
+                  oritail = numstr;
+                  break;
+              }
+              else if (decimalpoint != -1 && intpart.length > 3) {
+                  decimalpoint = numlen;
+              }
+
+              if (i == 0) {
+                  head = intpart;
+                  tail = decstr;
+                  balstr = head;
+                  oritail = numstr.substr(decimalpoint, numlen);
+                  demostr = "[" + head + "][" + tail + "][" + oritail + "]"
+                  ballen = balstr.length;
+              }
+              else if (i == 0 && numstr.length <= 3) {
+                  oritail = intpart + decstr;
+                  break;
+              }
+
+              else {
+                  headlen = balstr.length - 3;
+                  ballen = 3;
+                  numlen = balstr.length;
+
+                  if (headlen >= 3) {
+                      head = balstr.substr(0, headlen);
+                      tail = balstr.substr(headlen, numlen); // cheah modi here
+                      oritail = padfront(",", tail) + oritail;
+                      balstr = head;
+
+                  }
+                  else if (headlen < 3 && headlen != 0) {
+                      head = balstr.substr(0, headlen);
+                      tail = balstr.substr(headlen, numlen);
+                      demostr = "[" + head + "][" + tail + "][" + oritail + "]"
+                      oritail = head + padfront(",", tail) + oritail;
+                      break;
+                  }
+                  else {
+                      head = balstr.substr(0, headlen);
+                      tail = balstr.substr(headlen, numlen);
+                      demostr = "[" + head + "][" + tail + "][" + oritail + "]"
+                      oritail = head + tail + oritail;
+                      break;
+                  }
+
+              }
+
+          }
+
+          if (oritail.indexOf(".") != -1) {
+              outstr = oritail;
+          }
+          else {
+              outstr = oritail + decstr;
+          }
+          if (negfactor == -1) {
+              outstr = "-" + outstr;
+          }
+          
+          return outstr;
+      }
+  </script>
+
+  <script>
+    let result = "";
+
+    function GetCalcFields(DateStart, DateEnd, LotteryTypeID, myidx, objList) {
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetCalculatedFields",
+            data: JSON.stringify({ "dateStart": DateStart.toString(), "dateEnd": DateEnd.toString(), "LotteryTypeID": LotteryTypeID.toString() }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              objList.WL = response.WL;
+              objList.TOVer = response.TOVer;
+              objList.Pending =  response.Pending;
+              objList.AllLost = response.AllLost;
+              objList.All4dWin =  response.All4dWin;
+              objList.Allnon4dWin = response.Allnon4dWin;
+              objList.Agent_WL =  response.Agent_WL;
+              objList.Com_WL =  response.Com_WL;      
+              objsLottery.push(objList);
+              document.getElementById("jsonLottery").innerText = JSON.stringify(objsLottery);
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+      });
+
+      
+    }
+  </script>
+
+  <script>
+    function GetMPlayerBetInfo(myid) {
+      var mylid = myid;
+
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetMPlayerBetInfo",
+            data: JSON.stringify({ "dateStart": mylid, "dateEnd": "" }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              return response;
+
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
+    }
+  </script>
+
+  <script>
+    function GetBetTrans(myid) {
+      var mylid = myid;
+      var myname = "";
+      var myticket = "";
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetMPlayerBetInfo",
+            data: JSON.stringify({ "dateStart": mylid, "dateEnd": "" }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              myname = response.Username;
+              myticket = response.Bill_No_Ticket;
+
+              console.log("From Ajax: " + myname);
+              var f1 = "_f1_" + myid + "";
+              f1 = f1.replaceAll("'", "");
+              console.log("My id: " + f1);
+              document.getElementById(f1).innerHTML = myname;
+
+              var f2 = "_f2_" + myid + "";
+              f2 = f2.replaceAll("'", "");
+              document.getElementById(f2).innerHTML = myticket;
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
+    }
+  </script>
+
+  <script>
+    function testClass() {
+      alert("testing class");
+      var ds = document.getElementById("dateStart").value;
+      var de = document.getElementById("dateEnd").value;
+
+      document.getElementById("result").innerHTML = "<img src='http://localhost:5106/clock.gif' />";
+      GetLotteryTypes(ds, de);
+
+      console.log(document.getElementById("jsonLottery").innerText);
+    }
+  </script>
+
+  <script>
+    function readList(){
+      alert("hold on");
+
+      document.getElementById("result").innerHTML = "";
+      var mylist = JSON.parse(document.getElementById("jsonLottery").innerText);
+      var txt = "<table>";
+      txt = txt + "<tr>";
+      txt = txt + "<td class='boldcell'>LotteryTypeName</td>" ;
+      txt = txt + "<td class='boldcell'>TOver</td>" ;
+      txt = txt + "<td class='boldcell'>Pending</td>" ;
+      txt = txt + "<td class='boldcell'>Member W/L</td>" ;
+      txt = txt + "<td class='boldcell'>Agent W/L</td>" ;
+      txt = txt + "<td class='boldcell'>Company W/L</td>" ;
+      txt = txt + "<td class='boldcell'>MA W/L</td>" ;
+      txt = txt + "<td class='boldcell'>SM W/L</td>" ;
+      txt = txt + "</tr>";
+      for (let i = 0; i < mylist.length; i++) {
+        var tis = mylist[i];
+        txt = txt + "<tr>";
+        txt = txt + "<td>" + tis.LotteryTypeName + "</td>" ;
+        txt = txt + "<td>" + tis.TOVer + "</td>" ;
+        txt = txt + "<td>" + tis.Pending + "</td>" ;
+        txt = txt + "<td>" + tis.WL + "</td>" ;
+        txt = txt + "<td>" + tis.Agent_WL + "</td>" ;
+        txt = txt + "<td>" + tis.Com_WL + "</td>" ;
+        txt = txt + "<td>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+        txt = txt + "<td>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+        txt = txt + "</tr>";
+      }
+      txt = txt + "</table>";
+
+      document.getElementById("jsonLottery").style = "display:none;";
+
+      alert(document.getElementById("jsonLottery").style);
+      document.getElementById("result").innerHTML = txt;
+
+      alert(txt);
+
+
+      
+    }
+  </script>
+</head>
+
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      <label>Date Start</label><input type="text" id="dateStart" value="2024-10-15 00:00:00">
+      <label>Date End</label><input type="text" id="dateEnd" value="2024-10-15 23:59:59">
+      <button onclick="testTransX()">Test Trans</button>
+      <button onclick="testClass()">Test Dynamic Class</button>
+      <button onclick="readList()">Test Dynamic Class</button>
+    </div>
+    <div class="col-md-12 col-sm-12" id="result">
+      
+    </div>
+  </div>
+</div>
+
+<div style="display:none">
+    <input type="text" id="TOver" value="" />
+    <input type="text"  id="Pending" value="" />
+    <input type="text"  id="AllLost" value="" />
+    <input type="text"  id="All4dWin" value="" />
+    <input type="text"  id="Allnon4dWin" value="" />
+    <input type="text"  id="WL" value="" />
+    <input type="text"  id="Agent_WL" value="" />
+    <input type="text"  id="Com_WL" value="" />
+    
+</div>
+<div id="jsonLottery"></div>
+</body>
+</html>
