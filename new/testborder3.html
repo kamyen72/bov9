@@ -13,6 +13,8 @@
   <!-- Include Bootstrap DateTimePicker CDN -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+  <link href="./content/css/GHL/main.min.css" rel="stylesheet" />
+  <script type="text/javascript" src="./scripts/all-lib.min.js"></script>
 
   <style>
     @media ( max-width: 240px)
@@ -241,16 +243,16 @@
       color: #926800;
       padding: 0;
       display: block;
-      position: absolute;
-      top: 820px;
-      left:15px;
+      /* position: absolute; */
+      /* top: 820px; */
+      /* left:15px; */
       text-align:center;
       font-size: 12px;
     }
 
-    #footer .copyright {
+    /* #footer .copyright {
       display: none;
-    }
+    } */
 
     .col {
       display: none;
@@ -272,7 +274,7 @@
       display: none;
     }
 
-    #L1Area {
+    /* #L1Area {
       position: absolute;
       top: 110px;
       left: 0px;
@@ -312,20 +314,20 @@
       display: inline-block;
       padding-left: 5px;
       overflow: scroll;
-    }
+    } */
 
-    #closebutton2 {
-      position: absolute;
-      top: 90px;
-      border-radius: 10px;
+    #closebutton2,#copybutton2,#printbutton2,#excelbutton2,#prevbutton2 {
+      /* position: absolute;
+      top: 90px; */
+      /* border-radius: 10px; */
       left: 1500px;
-      display: inline-block;
+      /* display: inline-block; */
       width: 25px;
       height: 25px;
-      padding-left: 0px;
+      /* padding-left: 0px;
       padding-right: 0px;
       padding-top: 0px;
-      padding-bottom: 0px;
+      padding-bottom: 0px; */
       border: 1px solid;
       padding: 0px;
       box-shadow: 3px 2px #888888;
@@ -333,7 +335,7 @@
       cursor: pointer; 
     }
 
-    #copybutton2 {
+    /* #copybutton2 {
       position: absolute;
       top: 118px;
       border-radius: 10px;
@@ -350,9 +352,9 @@
       box-shadow: 3px 2px #888888;
       border-radius:15px;   
       cursor: pointer;       
-    }
+    } */
 
-    #printbutton2 {
+    /* #printbutton2 {
       position: absolute;
       top: 146px;
       border-radius: 10px;
@@ -370,9 +372,9 @@
       box-shadow: 3px 2px #888888;
       border-radius:15px;       
       cursor: pointer;       
-    }
+    } */
 
-    #excelbutton2 {
+    /* #excelbutton2 {
       position: absolute;
       top: 174px;
       border-radius: 10px;
@@ -390,14 +392,14 @@
       box-shadow: 3px 2px #888888;
       border-radius:15px;   
       cursor: pointer; 
-    }
+    }*/
 
     #downloadbutton2 {
-      position: absolute;
+      /* position: absolute;
       top: 202px;
       border-radius: 10px;
       left: 1500px;
-      display: inline-block;
+      display: inline-block; */
       width: 25px;
       height: 25px;
       padding-left: 10px;
@@ -413,7 +415,7 @@
       text-align: center;          
     }
 
-    #prevbutton2 {
+    /* #prevbutton2 {
       position: absolute;
       top: 230px;
       border-radius: 10px;
@@ -431,7 +433,7 @@
       box-shadow: 3px 2px #888888;
       border-radius:15px;     
       cursor: pointer;         
-    }
+    }  */
 
     .TableTitle {
       background: #0099FF;
@@ -596,37 +598,170 @@
   </script>
 
   <script>
-    function GenOverall_Excel_L1() {
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: "POST",
-            url: "http://localhost:5106/API/GenExcel_OverallL1",
-            data: JSON.stringify({ "InputText": document.getElementById("jsondata").innerText }),
-            dataType: "json",
-            crossDomain: true,
-            success: function (response) {
-                console.log("success");
-                console.log("original file name: " + response);
+    function GenOverall_Excel_L1(ReportTitle) {
+      // alert(document.getElementById("jsondata").innerText);
+      // alert(ReportTitle);
 
+      var myjs = document.getElementById("jsondata").innerText;
+      $.ajax({
+        type: "POST",
+        // url: "http://localhost:5106/Bet/GetMPlayerUsers",
+        url: "http://localhost:5106/API/GenExcel_OverallL1",
+        data: JSON.stringify({ "Val1": myjs, "Val2":ReportTitle }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        crossDomain: true,
+        success: function (response) {
+          // alert("success");
+
+          // alert(response);
+          // var converted = JSON.parse(response);
+          var fileName = "http://localhost:5106/ExcelFiles/" + response[0].FileName;
+          // alert(fileName);
+
+          var mybrotherleft = document.getElementById("excelbutton2").offsetLeft;
+          // alert("My Brother Left side: " + mybrotherleft);
+
+          // alert("My Brother Left width: " + document.getElementById("excelbutton2").offsetWidth);
+          // alert("My Brother Left Top: " + document.getElementById("excelbutton2").offsetTop);
+
+          document.getElementById("downloadbutton2").href = fileName;
+          document.getElementById("downloadbutton2").style.display = "inline-block";
+          document.getElementById("downloadbutton2").style.top = document.getElementById("excelbutton2").offsetTop + "px";
+
+          // // alert("success in getting Mplayer users: " + response.length);
+          // var confirmtext = "Are you sure you want to proceed with " +  response.ReturnText + " records?"
+          // if (confirm(confirmtext)) {
+          //   console.log('Report proceed.');
+          //   GenExcelL2Ajax(BetType, StartDate, EndDate, LotteryTypeID);
+          // } else {
+          //   return;
+          // }
+        },
+        failure: function (response) {
+            console.log("failure");
+        },
+        error: function (response, status) {
+            console.log("error");
+        }
+    });
+
+      // $.ajax({
+      //   type: "POST",
+      //   url: "http://localhost:5106/API/GenExcel_OverallL1",
+      //   data: JSON.stringify({ { "Val1": document.getElementById("jsondata").innerText, "Val2":ReportTitle }),
+      //   contentType: "application/json; charset=utf-8",
+      //   dataType: "json",
+      //   crossDomain: true,
+      //   success: function (response) {
+      //     alert("success");
+      //   },
+      //   failure: function (response) {
+      //       console.log("failure");
+      //   },
+      //   error: function (response, status) {
+      //       console.log("error");
+      //   }
+      // });
+  }
+  </script>
+
+  <script>
+    function GenOverall_Excel_L2_V3(me){
+      var StartDate = document.getElementById("dtDateS").value;
+      var EndDate = document.getElementById("dtDateE").value;
+
+      var StartTime = $('#appt-time').val();
+      var EndTime = $('#appt-time2').val();
+
+      if (StartTime == "") {
+        StartTime = "00:00:00";
+      }
+
+      if (EndTime == "") {
+        EndTime = "23:59:59";
+      }
+
+      StartDate = StartDate + " " + StartTime;
+      EndDate = EndDate + " " + EndTime;
+      
+      var BetType = $(me).attr("data-BetType");
+      var LotteryTypeID = $(me).attr("data-LotteryTypeID");
+      var linkname = $(me).attr("data-link");
+
+      var txt1 = "Drill Down on Bet Type: " + BetType + "";
+
+      $.ajax({
+        type: "POST",
+        // url: "http://localhost:5106/Bet/GetMPlayerUsers",
+        url: "http://localhost:5106/Bet/GetLotteryTypeSummaryLevelCount",
+        data: JSON.stringify({ "BetType": BetType, "dateStart": StartDate, "dateEnd": EndDate , "LotteryTypeID" : LotteryTypeID}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        crossDomain: true,
+        success: function (response) {
+          // alert("success in getting Mplayer users: " + response.length);
+          var confirmtext = "Are you sure you want to proceed with " +  response.ReturnText + " records?"
+          if (confirm(confirmtext)) {
+            // Save it!
+            console.log('Report proceed.');
+
+            GenExcelL2Ajax(BetType, StartDate, EndDate, LotteryTypeID, BetType, linkname);
+          } else {
+            // document.getElementById("L1Area").style.textAlign = "center";
+            // var txt = "<img src='http://localhost:5106/clock.gif' />";
+            // document.getElementById("L1Area").innerHTML = "";
+
+            return;
+          }
+        },
+        failure: function (response) {
+            console.log("failure");
+        },
+        error: function (response, status) {
+            console.log("error");
+        }
+    });
+    }
+  </script>
+
+  <script>
+    function GenExcelL2Ajax(BetType, StartDate, EndDate, LotteryTypeID, BetType, linkname){
+      // alert("am generating the excel file now");
+      var txt1 = "Drill Down on Bet Type: " + BetType + " for Date From: " + StartDate + " To: " + EndDate;
+
+      $.ajax({
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+              },
+              type: "POST",
+              url: "http://localhost:5106/Bet/GenExcel_OverallL2_V3",
+              data: JSON.stringify({ "BetType": BetType, "dateStart": StartDate, "dateEnd": EndDate , "LotteryTypeID" : LotteryTypeID , "ReportTitle": txt1}),
+              dataType: "json",
+              crossDomain: true,
+              success: function (response) {
+                alert("Excel file ready");
+                
                 var converted = JSON.parse(response);
-                console.log("converted: " + converted[0].FileName);
+                var fileName = "http://localhost:5106/ExcelFiles/" + converted[0].FileName;
+                var nlink = "#" + linkname;
+                // alert(nlink);
 
-                document.getElementById("downloadbutton2").href = "http://localhost:5106/ExcelFiles/" + converted[0].FileName;
-                document.getElementById("downloadbutton2").style.display = "block";
-            },
-            failure: function (response) {
-                console.log("failure");
-            },
-            error: function (response, status) {
-                console.log("error");
-            }
-        });
-        
-        console.log("done");
-        
+                $(nlink).innerHTML = "Download";
+                $(nlink).attr("href", fileName);
+                document.getElementById(linkname).style = "display:block";
+                
+                  // document.getElementById("downloadbutton2").href = "http://localhost:5106/ExcelFiles/" + converted[0].FileName;
+                  // document.getElementById("downloadbutton2").style.display = "block";
+              },
+              failure: function (response) {
+                  console.log("failure");
+              },
+              error: function (response, status) {
+                  console.log("error");
+              }
+          });
     }
   </script>
 
@@ -646,7 +781,7 @@
                   var converted = JSON.parse(response);
 
                   document.getElementById("downloadbutton2").href = "http://localhost:5106/ExcelFiles/" + converted[0].FileName;
-                  document.getElementById("downloadbutton2").style.display = "block";
+                  document.getElementById("downloadbutton2").style.display = "inline-block";
               },
               failure: function (response) {
                   console.log("failure");
@@ -659,6 +794,7 @@
           console.log("done");
       }
   </script>
+
 
   <script>
       function GenOverall_Excel_L3() {
@@ -680,7 +816,7 @@
                   console.log("converted: " + converted[0].FileName);
 
                   document.getElementById("downloadbutton2").href = "http://localhost:5106/ExcelFiles/" + converted[0].FileName;
-                  document.getElementById("downloadbutton2").style.display = "block";
+                  document.getElementById("downloadbutton2").style.display = "inline-block";
               },
               failure: function (response) {
                   console.log("failure");
@@ -713,8 +849,8 @@
                   var converted = JSON.parse(response);
                   console.log("converted: " + converted[0].FileName);
                   document.getElementById("downloadbutton2").href = "http://localhost:5106/ExcelFiles/" + converted[0].FileName;
-                  document.getElementById("downloadbutton2").style.display = "block";
-                  console.log(document.getElementById("downloadlink2").href);
+                  document.getElementById("downloadbutton2").style.display = "inline-block";
+                  // console.log(document.getElementById("downloadlink2").href);
               },
               failure: function (response) {
                   console.log("failure");
@@ -729,6 +865,8 @@
   </script>
 
   <script>
+    const objsLottery = [];
+
     $(document).ready(function(){
       // checkbrowser();
       // var browser_tboxwidth = "190px";
@@ -749,6 +887,7 @@
 
       // document.getElementById("copybutton2").style.left = closebuttleft + "px";
       // document.getElementById("printbutton2").style.left = closebuttleft + "px";      
+
       getToday();
       checkbrowser();
     })
@@ -757,14 +896,14 @@
   <script>
     function showArea(area){
       if (area == "L1") {
-        document.getElementById("L1Area").style.display = "inline-block";
+        document.getElementById("L1Area").style.display = "block";
         document.getElementById("L2Area").style.display = "none";
         document.getElementById("L3Area").style.display = "none";
         document.getElementById("L4Area").style.display = "none";
       }
       else if (area == "L2") {
         document.getElementById("L1Area").style.display = "none";
-        document.getElementById("L2Area").style.display = "inline-block";
+        document.getElementById("L2Area").style.display = "block";
         document.getElementById("L3Area").style.display = "none";
         document.getElementById("L4Area").style.display = "none";
         document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L1')");
@@ -772,7 +911,7 @@
       else if (area == "L3") {
         document.getElementById("L1Area").style.display = "none";
         document.getElementById("L2Area").style.display = "none";
-        document.getElementById("L3Area").style.display = "inline-block";
+        document.getElementById("L3Area").style.display = "block";
         document.getElementById("L4Area").style.display = "none";
         document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L2')");
       }
@@ -780,7 +919,7 @@
         document.getElementById("L1Area").style.display = "none";
         document.getElementById("L2Area").style.display = "none";
         document.getElementById("L3Area").style.display = "none";
-        document.getElementById("L4Area").style.display = "inline-block";
+        document.getElementById("L4Area").style.display = "block";
         document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L3')");
       }
     }
@@ -795,11 +934,44 @@
       document.getElementById("dtDateS").value = sdate;
       document.getElementById("dtDateE").value = edate;
 
+      document.getElementById("CheckingArea").style.display = "none";
+
+      // var txt = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("L1Area").style.textAlign = "center";
+      document.getElementById("L1Area").innerHTML = txt;
+
+      document.getElementById("L1Area").style.display = "block";
+      document.getElementById("L2Area").style.display = "none";
+      document.getElementById("L3Area").style.display = "none";
+      document.getElementById("L4Area").style.display = "none";
+
+      document.getElementById("prevbutton2").disabled = true;
+      document.getElementById("prevbutton2").style.cursor = "none";
+
+      document.getElementById("downloadbutton2").style.display = "none";
+
+
     }
   </script>
 
   <script>
     function getYesterday(){
+      document.getElementById("CheckingArea").style.display = "none";
+
+      var txt = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("L1Area").style.textAlign = "center";
+      document.getElementById("L1Area").innerHTML = txt;
+
+      document.getElementById("L1Area").style.display = "block";
+      document.getElementById("L2Area").style.display = "none";
+      document.getElementById("L3Area").style.display = "none";
+      document.getElementById("L4Area").style.display = "none";
+
+      document.getElementById("prevbutton2").disabled = true;
+      document.getElementById("prevbutton2").style.cursor = "none";
+
+      document.getElementById("downloadbutton2").style.display = "none";
+
       $.ajax({
             type: "POST",
             url: "http://localhost:5106/API/GetYesterday",
@@ -816,7 +988,42 @@
               document.getElementById("dtDateS").value = sdate;
               document.getElementById("dtDateE").value = edate;
 
-              GenOverallReport();
+              var StartDate = document.getElementById("dtDateS").value;
+              var EndDate = document.getElementById("dtDateE").value;
+
+              var StartTime = $('#appt-time').val();
+              var EndTime = $('#appt-time2').val();
+
+              if (StartTime == "") {
+                StartTime = "00:00:00";
+              }
+
+              if (EndTime == "") {
+                EndTime = "23:59:59";
+              }
+
+              StartDate = StartDate + " " + StartTime;
+              EndDate = EndDate + " " + EndTime;
+
+              var ds = StartDate;
+              var de = EndDate;
+
+      // alert("Before I go: \n" + ds + "\n" + de);
+
+              document.getElementById("L1Area").innerHTML = "<img src='http://localhost:5106/clock.gif' />";
+              document.getElementById("jsonLottery").innerText = "";
+
+              if (objsLottery.length != 0) {
+                objsLottery.length = 0;
+              }
+              // objsLottery = [];
+              GetLotteryTypes(ds, de);
+
+              // alert("Current List Items: " + objsLottery.length);
+              
+              // alert("Current List Items: " + objsLottery.length);
+              // GenOverallReport();
+              // readList();
 
             },
             failure: function (response) {
@@ -832,7 +1039,22 @@
 
   <script>
     function get7Days(){
-      alert("get7Days");
+      document.getElementById("CheckingArea").style.display = "none";
+
+      var txt = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("L1Area").style.textAlign = "center";
+      document.getElementById("L1Area").innerHTML = txt;
+
+      document.getElementById("L1Area").style.display = "block";
+      document.getElementById("L2Area").style.display = "none";
+      document.getElementById("L3Area").style.display = "none";
+      document.getElementById("L4Area").style.display = "none";
+
+      document.getElementById("prevbutton2").disabled = true;
+      document.getElementById("prevbutton2").style.cursor = "none";
+
+      document.getElementById("downloadbutton2").style.display = "none";
+
       $.ajax({
             type: "POST",
             url: "http://localhost:5106/API/Get7Days",
@@ -848,6 +1070,7 @@
               document.getElementById("dtDateE").value = edate;
 
               GenOverallReport();
+              // readList();
             },
             failure: function (response) {
                 console.log("failure");
@@ -861,6 +1084,22 @@
 
   <script>
     function get14Days(){
+      document.getElementById("CheckingArea").style.display = "none";
+
+      var txt = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("L1Area").style.textAlign = "center";
+      document.getElementById("L1Area").innerHTML = txt;
+
+      document.getElementById("L1Area").style.display = "block";
+      document.getElementById("L2Area").style.display = "none";
+      document.getElementById("L3Area").style.display = "none";
+      document.getElementById("L4Area").style.display = "none";
+
+      document.getElementById("prevbutton2").disabled = true;
+      document.getElementById("prevbutton2").style.cursor = "none";
+
+      document.getElementById("downloadbutton2").style.display = "none";
+
       $.ajax({
             type: "POST",
             url: "http://localhost:5106/API/Get14Days",
@@ -876,6 +1115,7 @@
               document.getElementById("dtDateE").value = edate;
 
               GenOverallReport();
+              // readList();
 
             },
             failure: function (response) {
@@ -890,7 +1130,7 @@
 
   <script>
     function hidemenu(){
-      alert("hiding menu");
+      // alert("hiding menu");
 
       var browser_tboxwidth = "200px";
 
@@ -944,6 +1184,8 @@
 
   <script>
     function checkbrowser(){
+      // document.getElementById("myDIV").innerHTML = "Search Condition";
+
       var uag = navigator.userAgent;
       var browsertype = "";
 
@@ -978,202 +1220,208 @@
       output += document.getElementById("browsertype").value;
       document.getElementById("CheckingArea").innerHTML = output;
 
-      if (browsertype == "Android Chrome" || browsertype == "Android Firefox" || browsertype == "iphone") {
-        var maxWidth = window.innerWidth - 35;
-        var ttwidth = maxWidth - 5 + "px";
+      // if (browsertype == "Android Chrome" || browsertype == "Android Firefox" || browsertype == "iphone") {
+      //   var maxWidth = window.innerWidth - 35;
+      //   var ttwidth = maxWidth - 5 + "px";
 
-        if (window.innerWidth <= 360 || browsertype == "iphone") {
-          $("#ckydummy").css("width", "5px");
-          $("#selected_ticketx").css("width", "150px");
-          $("#selected_accountx").css("width", "150px");
-          $("#selected_BetTypex").css("width", "150px");
-        }
+      //   if (window.innerWidth <= 360 || browsertype == "iphone") {
+      //     $("#ckydummy").css("width", "5px");
+      //     $("#selected_ticketx").css("width", "150px");
+      //     $("#selected_accountx").css("width", "150px");
+      //     $("#selected_BetTypex").css("width", "150px");
+      //   }
 
-        document.getElementById("myDIVx").style.left = "0px";
-        document.getElementById("mySearchElements").style.left = "0px";
-        document.getElementById("L1Area").style.left = "0px";
-        document.getElementById("L2Area").style.left = "0px";
-        document.getElementById("L3Area").style.left = "0px";
-        document.getElementById("L4Area").style.left = "0px";
+        // document.getElementById("myDIVx").style.left = "0px";
+        // document.getElementById("mySearchElements").style.left = "0px";
+        // document.getElementById("L1Area").style.left = "0px";
+        // document.getElementById("L2Area").style.left = "0px";
+        // document.getElementById("L3Area").style.left = "0px";
+        // document.getElementById("L4Area").style.left = "0px";
 
-        document.getElementById("myDIVx").style.marginLeft = "0px";
-        document.getElementById("mySearchElements").style.marginLeft = "0px";
-        document.getElementById("L1Area").style.marginLeft = "0px";
-        document.getElementById("L2Area").style.marginLeft = "0px";
-        document.getElementById("L3Area").style.marginLeft = "0px";
-        document.getElementById("L4Area").style.marginLeft = "0px";
+        // document.getElementById("myDIVx").style.marginLeft = "0px";
+        // document.getElementById("mySearchElements").style.marginLeft = "0px";
+        // document.getElementById("L1Area").style.marginLeft = "0px";
+        // document.getElementById("L2Area").style.marginLeft = "0px";
+        // document.getElementById("L3Area").style.marginLeft = "0px";
+        // document.getElementById("L4Area").style.marginLeft = "0px";
 
-        // document.getElementById("myDIVx").style.top = "205px";
-        document.getElementById("mySearchElements").style.top = "240px";
-        document.getElementById("mySearchElements").style.height = "255px";
+        // // document.getElementById("myDIVx").style.top = "205px";
+        // document.getElementById("mySearchElements").style.top = "240px";
+        // document.getElementById("mySearchElements").style.height = "255px";
 
-        document.getElementById("L1Area").style.top = "508px";
-        document.getElementById("L2Area").style.top = "508px";
-        document.getElementById("L3Area").style.top = "508px";
-        document.getElementById("L4Area").style.top = "508px";
+        // document.getElementById("L1Area").style.top = "508px";
+        // document.getElementById("L2Area").style.top = "508px";
+        // document.getElementById("L3Area").style.top = "508px";
+        // document.getElementById("L4Area").style.top = "508px";
 
-        document.getElementById("L1Area").style.maxHeight = "375px";
-        document.getElementById("L2Area").style.maxHeight = "355px";
-        document.getElementById("L3Area").style.maxHeight = "355px";
-        document.getElementById("L4Area").style.maxHeight = "355px";
+        // document.getElementById("L1Area").style.maxHeight = "375px";
+        // document.getElementById("L2Area").style.maxHeight = "355px";
+        // document.getElementById("L3Area").style.maxHeight = "355px";
+        // document.getElementById("L4Area").style.maxHeight = "355px";
 
-        // document.getElementById("myDIVx").style.maxWidth = 230 + "px";
-        document.getElementById("mySearchElements").style.maxWidth = ttwidth;
-        document.getElementById("L1Area").style.maxWidth = ttwidth;
-        document.getElementById("L2Area").style.maxWidth = ttwidth;
-        document.getElementById("L3Area").style.maxWidth = ttwidth;
-        document.getElementById("L4Area").style.maxWidth = ttwidth;
+        // // document.getElementById("myDIVx").style.maxWidth = 230 + "px";
+        // document.getElementById("mySearchElements").style.maxWidth = ttwidth;
+        // document.getElementById("L1Area").style.maxWidth = ttwidth;
+        // document.getElementById("L2Area").style.maxWidth = ttwidth;
+        // document.getElementById("L3Area").style.maxWidth = ttwidth;
+        // document.getElementById("L4Area").style.maxWidth = ttwidth;
 
-        document.getElementById("mySearchElements").style.width = ttwidth;
-        document.getElementById("L1Area").style.width = ttwidth;
-        document.getElementById("L2Area").style.width = ttwidth;
-        document.getElementById("L3Area").style.width = ttwidth;
-        document.getElementById("L4Area").style.width = ttwidth;
+        // document.getElementById("mySearchElements").style.width = ttwidth;
+        // document.getElementById("L1Area").style.width = ttwidth;
+        // document.getElementById("L2Area").style.width = ttwidth;
+        // document.getElementById("L3Area").style.width = ttwidth;
+        // document.getElementById("L4Area").style.width = ttwidth;
 
         //--- special treatment for Seach Condition ------
-        var tabletext = "<span>Search Condition</span>";
+      //   var tabletext = "<span>Search Condition</span>";
 
-        $("#myDIVx").css("display", "none");
+      //   $("#myDIVx").css("display", "none");
 
-        $("#myDIVx").toggleClass("ng-scope", "none");
+      //   $("#myDIVx").toggleClass("ng-scope", "none");
 
-        $("#specialtitle").html(tabletext);
-        $("#specialtitle").css("background", "red");
-        $("#specialtitle").css("position", "absolute");
-        $("#specialtitle").css("top", "205px");
-        $("#specialtitle").css("left", "0");
-        $("#specialtitle").css("height", "35px");
-        $("#specialtitle").css("display", "fixed");
-        $("#specialtitle").css("word-wrap", "normal");
-        $("#specialtitle").css("width", ttwidth);
-        $("#specialtitle").css("border", "250px");
-        $("#specialtitle").css("border-radius", "10px 10px 0px 0px");
-        $("#specialtitle").css("padding-left", "10px");
-        $("#specialtitle").css("padding-top", "9px");
-        $("#specialtitle").css("padding-bottom", "0px");
-        $("#specialtitle").css("font-family", "Arial Black");
-        $("#specialtitle").css("font-weight", "900");
-        $("#specialtitle").css("font-size", "15px");
-        $("#specialtitle").css("z-index", '999999');
-        $("#specialtitle").css("background-color", '#007E9F');
-        $("#specialtitle").css("color", '#ffffff');
+      //   $("#specialtitle").html(tabletext);
+      //   $("#specialtitle").css("background", "red");
+      //   $("#specialtitle").css("position", "absolute");
+      //   $("#specialtitle").css("top", "205px");
+      //   $("#specialtitle").css("left", "0");
+      //   $("#specialtitle").css("height", "35px");
+      //   $("#specialtitle").css("display", "fixed");
+      //   $("#specialtitle").css("word-wrap", "normal");
+      //   $("#specialtitle").css("width", ttwidth);
+      //   $("#specialtitle").css("border", "250px");
+      //   $("#specialtitle").css("border-radius", "10px 10px 0px 0px");
+      //   $("#specialtitle").css("padding-left", "10px");
+      //   $("#specialtitle").css("padding-top", "9px");
+      //   $("#specialtitle").css("padding-bottom", "0px");
+      //   $("#specialtitle").css("font-family", "Arial Black");
+      //   $("#specialtitle").css("font-weight", "900");
+      //   $("#specialtitle").css("font-size", "15px");
+      //   $("#specialtitle").css("z-index", '999999');
+      //   $("#specialtitle").css("background-color", '#007E9F');
+      //   $("#specialtitle").css("color", '#ffffff');
 
-        //--------------------------------------------------------
+      //   //--------------------------------------------------------
 
-        document.getElementById("mySearchElements").style.width = ttwidth;
-        $("#mySearchElements").css("height", '265px');
+      //   document.getElementById("mySearchElements").style.width = ttwidth;
+      //   $("#mySearchElements").css("height", '265px');
 
-        document.getElementById("L1Area").style.width = ttwidth;
-        document.getElementById("L2Area").style.width = ttwidth;
-        document.getElementById("L3Area").style.width = ttwidth;
-        document.getElementById("L4Area").style.width = ttwidth;
+      //   document.getElementById("L1Area").style.width = ttwidth;
+      //   document.getElementById("L2Area").style.width = ttwidth;
+      //   document.getElementById("L3Area").style.width = ttwidth;
+      //   document.getElementById("L4Area").style.width = ttwidth;
 
-        document.getElementById("L1Area").style.overflow = "scroll";
-        document.getElementById("L2Area").style.overflow = "scroll";
-        document.getElementById("L3Area").style.overflow = "scroll";
-        document.getElementById("L4Area").style.overflow = "scroll";
+      //   document.getElementById("L1Area").style.overflow = "scroll";
+      //   document.getElementById("L2Area").style.overflow = "scroll";
+      //   document.getElementById("L3Area").style.overflow = "scroll";
+      //   document.getElementById("L4Area").style.overflow = "scroll";
 
-        var closebuttleft = window.innerWidth - 40;
+      //   var closebuttleft = window.innerWidth - 40;
 
-        if (window.innerWidth < 412) {
-          closebuttleft = window.innerWidth - 35;
-        }
+      //   if (window.innerWidth < 412) {
+      //     closebuttleft = window.innerWidth - 35;
+      //   }
 
-        document.getElementById("closebutton2").style.left = closebuttleft + "px";
-        document.getElementById("copybutton2").style.left = closebuttleft + "px";
-        document.getElementById("copybutton2").style.left = closebuttleft + "px";
-        document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
-        document.getElementById("excelbutton2").style.left = closebuttleft + "px";
-        document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
-        document.getElementById("prevbutton2").style.left = closebuttleft + "px";
+      //   document.getElementById("closebutton2").style.left = closebuttleft + "px";
+      //   document.getElementById("copybutton2").style.left = closebuttleft + "px";
+      //   document.getElementById("copybutton2").style.left = closebuttleft + "px";
+      //   document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
+      //   document.getElementById("excelbutton2").style.left = closebuttleft + "px";
+      //   document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
+      //   document.getElementById("prevbutton2").style.left = closebuttleft + "px";
 
-        document.getElementById("closebutton2").style.display = "inline-block";
-        document.getElementById("closebutton2").style.zIndex = 99999;
-        document.getElementById("copybutton2").style.zIndex = 99999;
-        document.getElementById("printbutton2").style.zIndex = 99999;
-        document.getElementById("excelbutton2").style.zIndex = 99999;
-        document.getElementById("downloadbutton2").style.zIndex = 99999;
-        document.getElementById("prevbutton2").style.zIndex = 99999;
+      //   document.getElementById("closebutton2").style.display = "block";
+      //   document.getElementById("closebutton2").style.zIndex = 99999;
+      //   document.getElementById("copybutton2").style.zIndex = 99999;
+      //   document.getElementById("printbutton2").style.zIndex = 99999;
+      //   document.getElementById("excelbutton2").style.zIndex = 99999;
+      //   document.getElementById("downloadbutton2").style.zIndex = 99999;
+      //   document.getElementById("prevbutton2").style.zIndex = 99999;
 
-        var buttTop = 240;
-        document.getElementById("closebutton2").style.top = buttTop + "px";
-        document.getElementById("copybutton2").style.top = buttTop + 25 + "px";
-        document.getElementById("printbutton2").style.top = buttTop + 50 + "px";
-        document.getElementById("excelbutton2").style.top = buttTop + 75 + "px";
-        document.getElementById("downloadbutton2").style.top = buttTop + 100 + "px";
-        document.getElementById("prevbutton2").style.top = buttTop + 125 + "px";
-      }
-      else {
-        var maxWidth = window.innerWidth - 35;
-        var ttwidth = maxWidth - 5 + "px";
+      //   var buttTop = 240;
+      //   document.getElementById("closebutton2").style.top = buttTop + "px";
+      //   document.getElementById("copybutton2").style.top = buttTop + 25 + "px";
+      //   document.getElementById("printbutton2").style.top = buttTop + 50 + "px";
+      //   document.getElementById("excelbutton2").style.top = buttTop + 75 + "px";
+      //   document.getElementById("downloadbutton2").style.top = buttTop + 100 + "px";
+      //   document.getElementById("prevbutton2").style.top = buttTop + 125 + "px";
+      // }
+      // else {
+      //   // alert("Am on desktop");
+      //   var maxWidth = window.innerWidth - 35;
+      //   var ttwidth = maxWidth - 5 + "px";
         
-        document.getElementById("myDIVx").style.top = "0px";
-        document.getElementById("mySearchElements").style.top = "40px";
-        document.getElementById("mySearchElements").style.height = "95px";
-        document.getElementById("mySearchElements").style.maxWidth = "95%";
-        document.getElementById("mySearchElements").style.width = "95%";
+      //   document.getElementById("myDIVx").style.top = "0px";
+      //   document.getElementById("mySearchElements").style.top = "40px";
+      //   document.getElementById("mySearchElements").style.height = "95px";
+      //   document.getElementById("mySearchElements").style.maxWidth = "95%";
+      //   document.getElementById("mySearchElements").style.width = "95%";
 
-        document.getElementById("myDIVx").style.width = "95%";
+      //   document.getElementById("myDIVx").style.width = "95%";
 
-        document.getElementById("L1Area").style.top = "135px";
-        document.getElementById("L2Area").style.top = "135px";
-        document.getElementById("L3Area").style.top = "135px";
-        document.getElementById("L4Area").style.top = "135px";
+      //   document.getElementById("L1Area").style.top = "135px";
+      //   document.getElementById("L2Area").style.top = "135px";
+      //   document.getElementById("L3Area").style.top = "135px";
+      //   document.getElementById("L4Area").style.top = "135px";
 
-        document.getElementById("L1Area").style.maxHeight = "570px";
-        document.getElementById("L2Area").style.maxHeight = "570px";
-        document.getElementById("L3Area").style.maxHeight = "570px";
-        document.getElementById("L4Area").style.maxHeight = "570px";
+      //   document.getElementById("L1Area").style.maxHeight = "900px";
+      //   document.getElementById("L2Area").style.maxHeight = "900px";
+      //   document.getElementById("L3Area").style.maxHeight = "900px";
+      //   document.getElementById("L4Area").style.maxHeight = "900px";
 
-        document.getElementById("L1Area").style.maxWidth = "95%";
-        document.getElementById("L2Area").style.maxWidth = "95%";
-        document.getElementById("L3Area").style.maxWidth = "95%";
-        document.getElementById("L4Area").style.maxWidth = "95%";
+      //   document.getElementById("L1Area").style.height = "900px";
+      //   document.getElementById("L2Area").style.height = "900px";
+      //   document.getElementById("L3Area").style.height = "900px";
+      //   document.getElementById("L4Area").style.height = "900px";
 
-        var tabletext = "<span>Search Condition</span>";
+      //   document.getElementById("L1Area").style.maxWidth = "95%";
+      //   document.getElementById("L2Area").style.maxWidth = "95%";
+      //   document.getElementById("L3Area").style.maxWidth = "95%";
+      //   document.getElementById("L4Area").style.maxWidth = "95%";
 
-        // $("#myDIVx").css("display", "none");
+      //   var tabletext = "<span>Search Condition</span>";
 
-        // $("#myDIVx").toggleClass("ng-scope", "none");
+      //   // $("#myDIVx").css("display", "none");
 
-        // $("#specialtitle").html(tabletext);
-        // $("#specialtitle").css("background", "red");
-        // $("#specialtitle").css("position", "absolute");
-        // $("#specialtitle").css("top", "205px");
-        // $("#specialtitle").css("left", "0");
-        // $("#specialtitle").css("height", "35px");
-        // $("#specialtitle").css("display", "fixed");
-        // $("#specialtitle").css("word-wrap", "normal");
-        // $("#specialtitle").css("width", ttwidth);
-        // $("#specialtitle").css("border", "250px");
-        // $("#specialtitle").css("border-radius", "10px 10px 0px 0px");
-        // $("#specialtitle").css("padding-left", "10px");
-        // $("#specialtitle").css("padding-top", "9px");
-        // $("#specialtitle").css("padding-bottom", "0px");
-        // $("#specialtitle").css("font-family", "Arial Black");
-        // $("#specialtitle").css("font-weight", "900");
-        // $("#specialtitle").css("font-size", "15px");
-        // $("#specialtitle").css("z-index", '999999');
-        // $("#specialtitle").css("background-color", '#007E9F');
-        // $("#specialtitle").css("color", '#ffffff');
+      //   // $("#myDIVx").toggleClass("ng-scope", "none");
 
-        var copyrightleft = parseInt( window.innerWidth / 2) - 500;
-        document.getElementById("copyright2").style.position = "absolute";
-        document.getElementById("copyright2").style.left = copyrightleft + "px";
-        var hh = document.getElementById("L1Area").offsetHeight;
-        var tt = document.getElementById("L1Area").offsetTop;
+      //   // $("#specialtitle").html(tabletext);
+      //   // $("#specialtitle").css("background", "red");
+      //   // $("#specialtitle").css("position", "absolute");
+      //   // $("#specialtitle").css("top", "205px");
+      //   // $("#specialtitle").css("left", "0");
+      //   // $("#specialtitle").css("height", "35px");
+      //   // $("#specialtitle").css("display", "fixed");
+      //   // $("#specialtitle").css("word-wrap", "normal");
+      //   // $("#specialtitle").css("width", ttwidth);
+      //   // $("#specialtitle").css("border", "250px");
+      //   // $("#specialtitle").css("border-radius", "10px 10px 0px 0px");
+      //   // $("#specialtitle").css("padding-left", "10px");
+      //   // $("#specialtitle").css("padding-top", "9px");
+      //   // $("#specialtitle").css("padding-bottom", "0px");
+      //   // $("#specialtitle").css("font-family", "Arial Black");
+      //   // $("#specialtitle").css("font-weight", "900");
+      //   // $("#specialtitle").css("font-size", "15px");
+      //   // $("#specialtitle").css("z-index", '999999');
+      //   // $("#specialtitle").css("background-color", '#007E9F');
+      //   // $("#specialtitle").css("color", '#ffffff');
 
-        document.getElementById("copyright2").style.position = "absolute";
-        document.getElementById("copyright2").style.display = "block";
-        document.getElementById("copyright2").style.top = window.innerHeight + "px";
-      }
-      var t1 = "myDIVx top: " + document.getElementById("myDIVx").style.top;
-      var t2 = "mySearchElements top: " + document.getElementById("mySearchElements").style.top;
-      var t3 = "L1Area top: " + document.getElementById("L1Area").style.top;
+      //   var copyrightleft = parseInt( window.innerWidth / 2) - 500;
+      //   document.getElementById("copyright2").style.position = "absolute";
+      //   document.getElementById("copyright2").style.left = copyrightleft + "px";
+      //   var hh = document.getElementById("L1Area").offsetHeight;
+      //   var tt = document.getElementById("L1Area").offsetTop;
 
-      var w1 = "myDIVx width:" + document.getElementById("myDIVx").offsetWidth;
-      var w2 = "mySearchElements width:" + document.getElementById("mySearchElements").offsetWidth;
-      var w3 = "L1Area width:" + document.getElementById("L1Area").offsetWidth;
+      //   document.getElementById("copyright2").style.position = "absolute";
+      //   document.getElementById("copyright2").style.display = "block";
+      //   document.getElementById("copyright2").style.top = window.innerHeight + "px";
+      // }
+      // var t1 = "myDIVx top: " + document.getElementById("myDIVx").style.top;
+      // var t2 = "mySearchElements top: " + document.getElementById("mySearchElements").style.top;
+      // var t3 = "L1Area top: " + document.getElementById("L1Area").style.top;
+
+      // var w1 = "myDIVx width:" + document.getElementById("myDIVx").offsetWidth;
+      // var w2 = "mySearchElements width:" + document.getElementById("mySearchElements").offsetWidth;
+      // var w3 = "L1Area width:" + document.getElementById("L1Area").offsetWidth;
 
     }
   </script>
@@ -1207,6 +1455,8 @@
   </script>
 
   <script>
+      // const objsLottery = [];
+
       function GenOverallReport() {
           document.getElementById("CheckingArea").style.display = "none";
 
@@ -1214,7 +1464,7 @@
           document.getElementById("L1Area").style.textAlign = "center";
           document.getElementById("L1Area").innerHTML = txt;
 
-          document.getElementById("L1Area").style.display = "inline-block";
+          document.getElementById("L1Area").style.display = "block";
           document.getElementById("L2Area").style.display = "none";
           document.getElementById("L3Area").style.display = "none";
           document.getElementById("L4Area").style.display = "none";
@@ -1250,6 +1500,48 @@
             GetCurrentPeriodDates(CurrentPeriod);
           }
 
+          // document.getElementById("L1Area").style.textAlign = "left";
+          testClass();
+          // var copyrightleft = parseInt( window.innerWidth / 2) - 200;
+          // document.getElementById("copyright2").style.left = copyrightleft + "px";
+          // var hh = document.getElementById("L1Area").offsetHeight;
+          // var tt = document.getElementById("L1Area").offsetTop;
+          // var cpt = hh + tt + 5;
+
+          // document.getElementById("copyright2").style.position = "absolute";
+          // document.getElementById("copyright2").style.display = "block";
+          // document.getElementById("copyright2").style.top = cpt + "px";
+
+          checkbrowser(); // setting after data is populated
+
+          // var closebuttleft = document.getElementById("L1Area").offsetLeft + document.getElementById("L1Area").offsetWidth + 5;
+
+          // document.getElementById("closebutton2").style.left = closebuttleft + "px";
+          // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+          // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+          // document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
+          // document.getElementById("excelbutton2").style.left = closebuttleft + "px";
+          // document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
+          // document.getElementById("prevbutton2").style.left = closebuttleft + "px";
+
+          // document.getElementById("closebutton2").style.top = document.getElementById("L1Area").style.top + "px";
+          // document.getElementById("copybutton2").style.top = document.getElementById("L1Area").style.top + 25 + "px";
+          // document.getElementById("copybutton2").style.top = document.getElementById("L1Area").style.top + 50 + "px";
+          // document.getElementById("printbutton2").style.top = document.getElementById("L1Area").style.top + 75 + "px";
+          // document.getElementById("excelbutton2").style.top = document.getElementById("L1Area").style.top + 100 + "px";
+          // document.getElementById("downloadbutton2").style.top = document.getElementById("L1Area").style.top + 125 + "px";
+          // document.getElementById("prevbutton2").style.top = document.getElementById("L1Area").style.top + 150 + "px";
+
+
+          document.getElementById("excelbutton2").setAttribute("onclick", "GenOverall_Excel_L1('List By Bet Types')");
+
+          document.getElementById("copybutton2").setAttribute("onclick", "CopyToClipboard('L1Area')"); // PrintContent
+          document.getElementById("printbutton2").setAttribute("onclick", "print('L1Area')");
+
+          // var h = document.getElementById("L1Area").offsetHeight + 150;
+          // document.getElementById("L1Area").style.height = h + "px";
+          document.getElementById("HistoryL1").innerHTML = txt;
+/*
           $.ajax({
               type: "POST",
               url: "http://localhost:5106/API/GetOverallReport",
@@ -1409,12 +1701,450 @@
                   console.log("error");
               }
           });
+*/          
       }
   </script>
 
   <script>
+    function DrillBetTypeV2(me) {
+      // alert("am going to L2");
+      document.getElementById("CheckingArea").style.display = "none";
+
+      document.getElementById("L2Area").style.textAlign = "center";
+      var txt = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("L2Area").innerHTML = txt;
+
+      document.getElementById("L1Area").style.display = "none";
+      document.getElementById("L2Area").style.display = "block";
+      document.getElementById("L3Area").style.display = "none";
+      document.getElementById("L4Area").style.display = "none";
+
+      document.getElementById("prevbutton2").disabled = false;
+      document.getElementById("prevbutton2").style.cursor = "pointer";
+
+      document.getElementById("downloadbutton2").style.display = "none";
+
+      var StartDate = document.getElementById("dtDateS").value;
+      var EndDate = document.getElementById("dtDateE").value;
+
+      var StartTime = $('#appt-time').val();
+      var EndTime = $('#appt-time2').val();
+
+      if (StartTime == "") {
+        StartTime = "00:00:00";
+      }
+
+      if (EndTime == "") {
+        EndTime = "23:59:59";
+      }
+
+      StartDate = StartDate + " " + StartTime;
+      EndDate = EndDate + " " + EndTime;
+      
+      var BetType = $(me).attr("data-BetType");
+      var LotteryTypeID = $(me).attr("data-LotteryTypeID");
+
+      $.ajax({
+        type: "POST",
+        // url: "http://localhost:5106/Bet/GetMPlayerUsers",
+        url: "http://localhost:5106/Bet/GetLotteryTypeSummaryLevelCount",
+        data: JSON.stringify({ "BetType": BetType, "dateStart": StartDate, "dateEnd": EndDate , "LotteryTypeID" : LotteryTypeID}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        crossDomain: true,
+        success: function (response) {
+          // alert("success in getting Mplayer users: " + response.length);
+          var confirmtext = "Are you sure you want to proceed with " +  response.ReturnText + " records?"
+          if (confirm(confirmtext)) {
+            // Save it!
+            console.log('Report proceed.');
+
+            ContinueToL2(BetType, StartDate, EndDate, LotteryTypeID);
+          } else {
+            document.getElementById("L2Area").style.textAlign = "center";
+            var txt = "<img src='http://localhost:5106/clock.gif' />";
+            document.getElementById("L2Area").innerHTML = "";
+
+            return;
+          }
+
+          
+        },
+        failure: function (response) {
+            console.log("failure");
+        },
+        error: function (response, status) {
+            console.log("error");
+        }
+    });
+
+    }
+  </script>
+
+  <script>
+    function ContinueToL2(BetType, StartDate, EndDate, LotteryTypeID) {
+      // alert("a big big task is happening");
+
+      $.ajax({
+              type: "POST",
+              url: "http://localhost:5106/Bet/GetMPlayerUsers",
+              // url: "http://localhost:5106/Bet/GetLotteryTypeSummaryLevelCount",
+              data: JSON.stringify({ "BetType": BetType, "dateStart": StartDate, "dateEnd": EndDate , "LotteryTypeID" : LotteryTypeID}),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              crossDomain: true,
+              success: function (response) {
+                ShowL2Report(response, BetType);
+            },
+          failure: function (response) {
+              console.log("failure");
+          },
+          error: function (response, status) {
+              console.log("error");
+          }
+      });
+    }
+  </script>
+
+  <script>
+    function ShowL2Report(response, BetType) {
+      // alert("At Level 2: " + response.length);
+
+      var objList = [];
+      for (let j = 0; j < response.length; j++) {
+        var myobj = {
+          "UserName": response[j].UserName.toString(),
+          "CurrentPeriod": response[j].CurrentPeriod.toString(),
+          "ShowResultDate": response[j].ShowResultDate.toString().replaceAll("T", " "),
+          "UpdateDate": response[j].UpdateDate.toString().replaceAll("T", " "),
+          "TurnOver": response[j].TOver.toString(),
+          "TotalWin": response[j].TotalWin.toString(),
+          "TotalLost": response[j].TotalLost.toString(),
+          "WL": response[j].WL.toString(),
+          "TotalPending": response[j].TotalPending.toString(),
+          "Key": "",
+          "ABC": "",
+          "AB": ""
+        }
+
+        objList.push(myobj);
+      }
+
+      document.getElementById("jsondataL2").innerText = JSON.stringify(objList);
+      var mydata = JSON.parse(document.getElementById("jsondataL2").innerText);
+      var myrows = mydata.length;
+
+      // alert(myrows);
+
+      //---- setup the key -----
+      var SearchList = [];
+      for (let i = 0; i < myrows; i++) {
+        mydata[i].Key = mydata[i].UserName + "-" + mydata[i].CurrentPeriod + "-" + mydata[i].ShowResultDate + "-" + mydata[i].UpdateDate;
+        mydata[i].ABC = mydata[i].UserName + "-" + mydata[i].CurrentPeriod + "-" + mydata[i].ShowResultDate;
+        mydata[i].AB = mydata[i].UserName + "-" + mydata[i].CurrentPeriod;
+        SearchList.push(mydata[i]);
+      }
+
+      // alert("key settting done!");
+
+      //--- sorting the array -----
+      mydata.sort(function(c, d){
+
+          let x = c.Key.toLowerCase();
+          let y = d.Key.toLowerCase();
+          if (x < y) {return -1;}
+          if (x > y) {return 1;}
+
+          return 0;
+      });
+
+      mydata.sort(function(c, d){
+
+          let x = c.ABC.toLowerCase();
+          let y = d.ABC.toLowerCase();
+          if (x < y) {return -1;}
+          if (x > y) {return 1;}
+
+          return 0;
+      });
+
+      // var SearchList = [];
+
+      // for (let i = 0; i < myrows; i++) {
+      // }
+
+      // alert("key sorting done!");
+
+      //---- mydata is sorted on [User]; [User, Ticket and Opening Time] as ABC ---------------------------
+
+      var ttTOver = 0;
+      var ttTotalWin = 0;
+      var ttTotalLost = 0;
+      var ttPending = 0;
+      var ttWL = 0;
+
+      var txt1 = "<span style='font-family: Helvetica;font-size: 12px;font-weight:bold;color:red;'>Drill Down on Bet Type: " + BetType + "</span><br>";
+      var txt = "<table class='table table-striped table-bordered'>";
+      txt = txt + "<thead><tr>";
+      txt = txt + "<th class='cellborder cellleft'>UserName</th>";
+      txt = txt + "<th class='cellborder cellleft'>BillNo</th>";
+      txt = txt + "<th class='cellborder cellleft'>OpeningTime</th>";
+      txt = txt + "<th class='cellborder cellleft'>UpdateTime</th>";
+      txt = txt + "<th class='cellborder cellleft'>TOver</th>";
+      txt = txt + "<th class='cellborder cellleft'>Win</th>";
+      txt = txt + "<th class='cellborder cellleft'>Lose</th>";
+      txt = txt + "<th class='cellborder cellleft'>Member W/L</th>";
+      txt = txt + "<th class='cellborder cellleft'>Pending</th>";
+      txt = txt + "</tr></thead>";
+
+      var prevUser = "";
+      var prevABC = "";
+      var prevAB = "";
+
+      var rowspan = 1;
+
+      var UserRow = 0;
+      var ABRow = 0;
+      var ABCRow = 0;
+
+      var IsFirstTime = false;
+
+      // alert(txt);
+
+      for (let i = 0; i < myrows; i++) {
+        //---- at first time, first record ----------------------------------
+        // alert("CurrentRow point 1: " + i);
+
+        if (i == 0) {
+          prevUser = mydata[i].UserName;
+          prevAB = mydata[i].AB;
+          prevABC = mydata[i].ABC;
+
+          UserRow = 0;
+          ABRow = 0;
+          ABCRow = 0;
+
+          IsFirstTime = true;
+        }
+
+        // alert(mydata[i].UserName + " ~vs~ " +  prevUser + " ~~ i: " + i);
+
+        if (i !=0 && mydata[i].UserName != prevUser) {
+          prevUser = mydata[i].UserName;
+          prevAB = mydata[i].AB;
+          prevABC = mydata[i].ABC;
+
+          UserRow = 0;
+          ABRow = 0;
+          ABCRow = 0;
+
+          IsFirstTime = true;
+        }
+
+        for (let t = 0; t < myrows; t++) {
+          if (SearchList[t].UserName == prevUser) {
+            UserRow++;
+          }
+
+          if (SearchList[t].AB == prevAB && SearchList[t].UserName == prevUser) {
+            ABRow++;
+          }
+
+          if (SearchList[t].ABC == prevABC && SearchList[t].AB == prevAB && SearchList[t].UserName == prevUser) {
+            ABCRow++;
+          }
+        }
+
+        if (UserRow > 1) {
+          UserRow = UserRow - 1;
+          ABRow = ABRow - 1;
+        }
+
+        if (prevUser == "DAIB_HHHAABL1GUE") {
+          // alert(i + " UserRow: " + UserRow);
+          // alert(i + " ABRow: " + ABRow);
+        }
+
+        // alert("CurrentRow point 2: " + i);
+
+        var cellclass = "";
+        // alert("CurrentRow point 3: " + i);
+
+        var otime = mydata[i].ShowResultDate;
+        // alert("CurrentRow point 4: " + i);
+        var utime = mydata[i].UpdateDate.toString().replaceAll("T", " ");
+
+        txt = txt + "<tr>";
+
+        
+
+        var myi = i;
+        if (i % 2 != 0) {
+          cellclass = "cellgrey";
+        }
+        else {
+          cellclass = "";
+        }
+
+        UserRow = 1;
+        ABRow = 1;
+        ABCRow = 1;
+
+        //-------- first merged column on User Name ------------------------
+        // alert("IsFirstTime: " + IsFirstTime + "\nPrevUser: " + prevUser + "\nUserName: " + mydata[i].UserName);
+
+        if (IsFirstTime && mydata[i].UserName == prevUser) {
+          txt = txt + "<td valign='top' rowspan="+ UserRow + " class='celldata cellleft " + cellclass + "' style='max-width:120px;'><span onclick='DrillByUserName(this)' class='bckPeal cellleft' data-UserName='" + mydata[i].UserName + "' data-BetType='" + BetType + "'>" + mydata[i].UserName + "</span></td>";
+          // IsFirstTime = false;
+        }
+        else {
+          txt = txt + "<td></td>";
+        }
+
+        
+        // second merged field ----------------------------------
+        if (IsFirstTime && mydata[i].AB == prevAB && mydata[i].UserName == prevUser) {
+          txt = txt + "<td valign='top' rowspan=" + ABRow + " class='celldata cellleft " + cellclass + "' style='max-width:120px;'><span class='cellleft'>" + mydata[i].CurrentPeriod + "</span></td>";
+          // IsFirstTime = false;
+        }
+        else {
+          txt = txt + "<td></td>";
+        }
+
+
+        // second merged field ----------------------------------
+        if (IsFirstTime && mydata[i].ABC == prevABC && mydata[i].AB == prevAB && mydata[i].UserName == prevUser) {
+          txt = txt + "<td valign='top' rowspan=" + ABCRow + " class='celldata cellleft " + cellclass + "' style='max-width:120px;'><span class='cellleft'>" + otime + "</span></td>";
+        }
+        else {
+          txt = txt + "<td></td>";
+        }
+
+        
+        IsFirstTime = false;
+
+        
+
+        txt = txt + "<td class='celldata cellleft " + cellclass + "' style='max-width:120px;'><span class='cellleft'>" + utime + "</span></td>";
+        txt = txt + "<td class='celldata cellleft " + cellclass + "'>" + formatcomma( Number(mydata[i].TurnOver.toString()).toFixed(4) ) + "</td>";
+        txt = txt + "<td class='celldata cellleft " + cellclass + "'>" + formatcomma(Number(mydata[i].TotalWin.toString()).toFixed(4)) + "</td>";
+        txt = txt + "<td class='celldata cellleft " + cellclass + "'>" + formatcomma(Number(mydata[i].TotalLost.toString()).toFixed(4)) + "</td>";
+
+        if (Number(mydata[i].WL.toString()) < 0) {
+          txt = txt + "<td class='negativecell celldata cellleft " + cellclass + "'>" + formatcomma(Number(mydata[i].WL.toString()).toFixed(4)) + "</td>";
+        }
+        else {
+          txt = txt + "<td class='celldata cellleft " + cellclass + "'>" + formatcomma(Number(mydata[i].WL.toString()).toFixed(4)) + "</td>";
+        }
+        txt = txt + "<td class='celldata cellleft " + cellclass + "'>" + formatcomma(Number(mydata[i].TotalPending.toString()).toFixed(4)) + "</td>";
+
+        txt = txt + "</tr>";
+        prevUser = "";
+
+        ttTOver = ttTOver + Number(mydata[i].TurnOver.toString());
+        ttTotalWin = ttTotalWin + Number(mydata[i].TotalWin.toString());
+        ttTotalLost = ttTotalLost + Number(mydata[i].TotalLost.toString());
+        ttPending = ttPending + Number(mydata[i].TotalPending.toString());
+        ttWL = ttWL + Number(mydata[i].WL.toString());
+
+
+        // ----- before looping back to next item --------
+        prevUser = mydata[i].UserName;
+        prevAB = mydata[i].AB;
+        prevABC = mydata[i].ABC;
+        
+
+        // alert("CurrentRow: " + i);
+      }
+
+      //---- final summary line ---------------------------------------
+
+      // alert("Showing Summary Line");
+
+      if (myrows % 2 != 0) {
+        cellclass = "cellgrey";
+      }
+      else {
+        cellclass = "celldata";
+      }
+
+      txt = txt + "<tr>";
+      txt = txt + "<td class='sumcell cellborder cellleft " + cellclass + "' colspan=4><span style='font-weight:500;'>Total</span></td>";
+      txt = txt + "<td class='sumcell cellborder cellleft " + cellclass + "'>" + formatcomma(ttTOver.toFixed(4) ) + "</td>";
+      txt = txt + "<td class='sumcell cellborder cellleft " + cellclass + "'>" + formatcomma(ttTotalWin.toFixed(4)) + "</td>";
+      txt = txt + "<td class='sumcell cellborder cellleft " + cellclass + "'>" + formatcomma(ttTotalLost.toFixed(4)) + "</td>";
+
+      if (ttWL < 0) {
+        txt = txt + "<td class='sumcell cellborder cellleft negativecell " + cellclass + "'>" + formatcomma(ttWL.toFixed(4)) + "</td>";
+      }
+      else {
+        txt = txt + "<td class='sumcell cellborder cellleft " + cellclass + "'>" + formatcomma(ttWL.toFixed(4)) + "</td>";
+      }
+      txt = txt + "<td class='sumcell cellborder cellleft " + cellclass + "'>" + formatcomma(ttPending.toFixed(4)) + "</td>";
+      txt = txt + "</tr>";
+
+      document.getElementById("L2Area").innerHTML = txt1 + txt;
+
+      // var copyrightleft = parseInt( window.innerWidth / 2) - 200;
+      // document.getElementById("copyright2").style.left = copyrightleft + "px";
+      // var hh = document.getElementById("L2Area").offsetHeight;
+      // var tt = document.getElementById("L2Area").offsetTop;
+      // var cpt = hh + tt + 5;
+
+      // document.getElementById("copyright2").style.position = "absolute";
+      // document.getElementById("copyright2").style.display = "block";
+      // document.getElementById("copyright2").style.top = cpt + "px";
+
+      checkbrowser();
+
+      // var closebuttleft = document.getElementById("L2Area").offsetLeft + document.getElementById("L2Area").offsetWidth + 5;
+
+      // document.getElementById("closebutton2").style.left = closebuttleft + "px";
+      // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+      // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+      // document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
+      // document.getElementById("excelbutton2").style.left = closebuttleft + "px";
+      // document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
+      // document.getElementById("prevbutton2").style.left = closebuttleft + "px";
+
+      // document.getElementById("closebutton2").style.top = document.getElementById("L2Area").style.top + "px";
+      // document.getElementById("copybutton2").style.top = document.getElementById("L2Area").style.top + 25 + "px";
+      // document.getElementById("copybutton2").style.top = document.getElementById("L2Area").style.top + 50 + "px";
+      // document.getElementById("printbutton2").style.top = document.getElementById("L2Area").style.top + 75 + "px";
+      // document.getElementById("excelbutton2").style.top = document.getElementById("L2Area").style.top + 100 + "px";
+      // document.getElementById("downloadbutton2").style.top = document.getElementById("L2Area").style.top + 125 + "px";
+      // document.getElementById("prevbutton2").style.top = document.getElementById("L2Area").style.top + 150 + "px";
+
+      // var hh = document.getElementById("L2Area").offsetHeight;
+      // var tt = document.getElementById("L2Area").offsetTop;
+      // var cpt = hh + tt + 5;
+
+      // document.getElementById("copyright2").style.position = "absolute";
+      // document.getElementById("copyright2").style.display = "block";
+      // document.getElementById("copyright2").style.top = cpt + "px";
+
+      document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L1')");
+
+      document.getElementById("excelbutton2").setAttribute("onclick", "GenOverall_Excel_L2()");
+      document.getElementById("HistoryL2HD").innerHTML = txt1 + txt;
+      document.getElementById("HistoryL2HD").style = "display: none;";
+      document.getElementById("jsondataL2").innerText = '{ "ReportTitle": "Win/Lose Report by Game - Drill Down on Bet Type: ' + BetType + ' (Level 2)", "Data" : ' + document.getElementById("jsondataL2").innerText + '}';
+      document.getElementById("HistoryL2").innerHTML = txt;
+      document.getElementById("HistoryL2").style = "display: none;";
+
+      // const body = document.body;
+      // const html = document.documentElement;
+      // const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+      console.log(document.getElementById("jsondataL2").innerText);
+
+      document.getElementById("copybutton2").setAttribute("onclick", "CopyToClipboard('L2Area')");
+      document.getElementById("printbutton2").setAttribute("onclick", "print('L2Area')");
+  }
+  </script>
+
+  <script>
       function DrillBetType(me) {
-        alert("am ok woh");
+        
           document.getElementById("CheckingArea").style.display = "none";
 
           document.getElementById("L2Area").style.textAlign = "center";
@@ -1422,7 +2152,7 @@
           document.getElementById("L2Area").innerHTML = txt;
 
           document.getElementById("L1Area").style.display = "none";
-          document.getElementById("L2Area").style.display = "inline-block";
+          document.getElementById("L2Area").style.display = "block";
           document.getElementById("L3Area").style.display = "none";
           document.getElementById("L4Area").style.display = "none";
 
@@ -1432,8 +2162,12 @@
           document.getElementById("downloadbutton2").style.display = "none";
           
           var BetType = $(me).attr("data-BetType");
+          var LotteryTypeID = $(me).attr("data-LotteryTypeID");
+          var LotteryInfoID = $(me).attr("data-LotteryInfoID");
           var StartDate = document.getElementById("dtDateS").value;
           var EndDate = document.getElementById("dtDateE").value;
+
+          // alert("Bet Type: " + BetType + "\nLotteryTypeID: " + LotteryTypeID + "\nLotteryInfoID: " + LotteryInfoID + "\nStartDate: " + StartDate + "\nEndDate: " + EndDate);
 
           var CurrentPeriod = document.getElementById("selected_ticketx").value;
           var UserName = document.getElementById("selected_accountx").value;
@@ -1474,7 +2208,7 @@
                       "BillNo": response[j].BillNo.toString(),
                       "OpeningTime": response[j].OpeningTime.toString().replaceAll("T", " "),
                       "UpdateDate": response[j].UpdateDate.toString().replaceAll("T", " "),
-                      "TurnOver": response[j].TurnOver.toString(),
+                      "TurnOver": response[j].TOver.toString(),
                       "TotalWin": response[j].TotalWin.toString(),
                       "TotalLost": response[j].TotalLost.toString(),
                       "WL": response[j].WL.toString(),
@@ -1534,18 +2268,18 @@
                   var ttWL = 0;
 
                   var txt1 = "<span style='font-family: Helvetica;font-size: 12px;font-weight:bold;color:red;'>Drill Down on Bet Type: " + BetType + "</span><br>";
-                  var txt = "<table style='font-size:12px; width:1400px;' cellpadding=0 cellspacing=0>";
-                  txt = txt + "<tr>";
-                  txt = txt + "<td class='cellborder cellleft'>UserName</td>";
-                  txt = txt + "<td class='cellborder cellleft'>BillNo</td>";
-                  txt = txt + "<td class='cellborder cellleft'>OpeningTime</td>";
-                  txt = txt + "<td class='cellborder cellleft'>UpdateTime</td>";
-                  txt = txt + "<td class='cellborder cellleft'>TOver</td>";
-                  txt = txt + "<td class='cellborder cellleft'>Win</td>";
-                  txt = txt + "<td class='cellborder cellleft'>Lose</td>";
-                  txt = txt + "<td class='cellborder cellleft'>Member W/L</td>";
-                  txt = txt + "<td class='cellborder cellleft'>Pending</td>";
-                  txt = txt + "</tr>";
+                  var txt = "<table class='table table-striped table-bordered'>";
+                  txt = txt + "<thead><tr>";
+                  txt = txt + "<th class='cellborder cellleft'>UserName</th>";
+                  txt = txt + "<th class='cellborder cellleft'>BillNo</th>";
+                  txt = txt + "<th class='cellborder cellleft'>OpeningTime</th>";
+                  txt = txt + "<th class='cellborder cellleft'>UpdateTime</th>";
+                  txt = txt + "<th class='cellborder cellleft'>TOver</th>";
+                  txt = txt + "<th class='cellborder cellleft'>Win</th>";
+                  txt = txt + "<th class='cellborder cellleft'>Lose</th>";
+                  txt = txt + "<th class='cellborder cellleft'>Member W/L</th>";
+                  txt = txt + "<th class='cellborder cellleft'>Pending</th>";
+                  txt = txt + "</tr></thead>";
 
                   var prevUser = "";
                   var prevABC = "";
@@ -1720,43 +2454,43 @@
 
                   document.getElementById("L2Area").innerHTML = txt1 + txt;
 
-                  var copyrightleft = parseInt( window.innerWidth / 2) - 200;
-                  document.getElementById("copyright2").style.left = copyrightleft + "px";
-                  var hh = document.getElementById("L2Area").offsetHeight;
-                  var tt = document.getElementById("L2Area").offsetTop;
-                  var cpt = hh + tt + 5;
+                  // var copyrightleft = parseInt( window.innerWidth / 2) - 200;
+                  // document.getElementById("copyright2").style.left = copyrightleft + "px";
+                  // var hh = document.getElementById("L2Area").offsetHeight;
+                  // var tt = document.getElementById("L2Area").offsetTop;
+                  // var cpt = hh + tt + 5;
 
-                  document.getElementById("copyright2").style.position = "absolute";
-                  document.getElementById("copyright2").style.display = "block";
-                  document.getElementById("copyright2").style.top = cpt + "px";
+                  // document.getElementById("copyright2").style.position = "absolute";
+                  // document.getElementById("copyright2").style.display = "block";
+                  // document.getElementById("copyright2").style.top = cpt + "px";
 
                   checkbrowser();
 
-                  var closebuttleft = document.getElementById("L2Area").offsetLeft + document.getElementById("L2Area").offsetWidth + 5;
+                  // var closebuttleft = document.getElementById("L2Area").offsetLeft + document.getElementById("L2Area").offsetWidth + 5;
 
-                  document.getElementById("closebutton2").style.left = closebuttleft + "px";
-                  document.getElementById("copybutton2").style.left = closebuttleft + "px";
-                  document.getElementById("copybutton2").style.left = closebuttleft + "px";
-                  document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
-                  document.getElementById("excelbutton2").style.left = closebuttleft + "px";
-                  document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
-                  document.getElementById("prevbutton2").style.left = closebuttleft + "px";
+                  // document.getElementById("closebutton2").style.left = closebuttleft + "px";
+                  // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+                  // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+                  // document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
+                  // document.getElementById("excelbutton2").style.left = closebuttleft + "px";
+                  // document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
+                  // document.getElementById("prevbutton2").style.left = closebuttleft + "px";
 
-                  document.getElementById("closebutton2").style.top = document.getElementById("L2Area").style.top + "px";
-                  document.getElementById("copybutton2").style.top = document.getElementById("L2Area").style.top + 25 + "px";
-                  document.getElementById("copybutton2").style.top = document.getElementById("L2Area").style.top + 50 + "px";
-                  document.getElementById("printbutton2").style.top = document.getElementById("L2Area").style.top + 75 + "px";
-                  document.getElementById("excelbutton2").style.top = document.getElementById("L2Area").style.top + 100 + "px";
-                  document.getElementById("downloadbutton2").style.top = document.getElementById("L2Area").style.top + 125 + "px";
-                  document.getElementById("prevbutton2").style.top = document.getElementById("L2Area").style.top + 150 + "px";
+                  // document.getElementById("closebutton2").style.top = document.getElementById("L2Area").style.top + "px";
+                  // document.getElementById("copybutton2").style.top = document.getElementById("L2Area").style.top + 25 + "px";
+                  // document.getElementById("copybutton2").style.top = document.getElementById("L2Area").style.top + 50 + "px";
+                  // document.getElementById("printbutton2").style.top = document.getElementById("L2Area").style.top + 75 + "px";
+                  // document.getElementById("excelbutton2").style.top = document.getElementById("L2Area").style.top + 100 + "px";
+                  // document.getElementById("downloadbutton2").style.top = document.getElementById("L2Area").style.top + 125 + "px";
+                  // document.getElementById("prevbutton2").style.top = document.getElementById("L2Area").style.top + 150 + "px";
 
-                  var hh = document.getElementById("L2Area").offsetHeight;
-                  var tt = document.getElementById("L2Area").offsetTop;
-                  var cpt = hh + tt + 5;
+                  // var hh = document.getElementById("L2Area").offsetHeight;
+                  // var tt = document.getElementById("L2Area").offsetTop;
+                  // var cpt = hh + tt + 5;
 
-                  document.getElementById("copyright2").style.position = "absolute";
-                  document.getElementById("copyright2").style.display = "block";
-                  document.getElementById("copyright2").style.top = cpt + "px";
+                  // document.getElementById("copyright2").style.position = "absolute";
+                  // document.getElementById("copyright2").style.display = "block";
+                  // document.getElementById("copyright2").style.top = cpt + "px";
 
                   document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L1')");
 
@@ -1767,9 +2501,9 @@
                   document.getElementById("HistoryL2").innerHTML = txt;
                   document.getElementById("HistoryL2").style = "display: none;";
 
-                  const body = document.body;
-                  const html = document.documentElement;
-                  const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+                  // const body = document.body;
+                  // const html = document.documentElement;
+                  // const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
                   console.log(document.getElementById("jsondataL2").innerText);
 
                   document.getElementById("copybutton2").setAttribute("onclick", "CopyToClipboard('L2Area')");
@@ -1795,7 +2529,7 @@
 
         document.getElementById("L1Area").style.display = "none";
         document.getElementById("L2Area").style.display = "none";
-        document.getElementById("L3Area").style.display = "inline-block";
+        document.getElementById("L3Area").style.display = "block";
         document.getElementById("L4Area").style.display = "none";
 
         document.getElementById("downloadbutton2").style.display = "none";
@@ -1831,13 +2565,13 @@
                 var ttTotalWinLose = 0;
 
                 var txt1 = "<span style='font-family: Helvetica;font-size: 12px;font-weight:bold;color:red;'>Drill Down on Bet Type: " + BetType + ", User Name: " + UserName + "</span><br>";
-                var txt = "<table style='font-size:12px;'>";
-                txt = txt + "<tr>";
-                txt = txt + "<td class='cellborder cellleft'>BillNo</td>";
-                txt = txt + "<td class='cellborder cellleft'>OpeningTime</td>";
-                txt = txt + "<td class='cellborder cellleft'>TOver</td>";
-                txt = txt + "<td class='cellborder cellleft'>WinLose</td>";
-                txt = txt + "</tr>";
+                var txt = "<table class='table table-striped table-bordered'>";
+                txt = txt + "<thead><tr>";
+                txt = txt + "<th class='cellborder cellleft'>BillNo</th>";
+                txt = txt + "<th class='cellborder cellleft'>OpeningTime</th>";
+                txt = txt + "<th class='cellborder cellleft'>TOver</th>";
+                txt = txt + "<th class='cellborder cellleft'>WinLose</th>";
+                txt = txt + "</tr></thead>";
 
                 for (let i = 0; i < myrows; i++) {
                     if (i % 2 != 0) {
@@ -1886,45 +2620,45 @@
 
                 document.getElementById("L3Area").innerHTML = txt1 + txt;
 
-                var copyrightleft = parseInt( window.innerWidth / 2) - 200;
-                document.getElementById("copyright2").style.left = copyrightleft + "px";
-                var hh = document.getElementById("L3Area").offsetHeight;
-                var tt = document.getElementById("L3Area").offsetTop;
-                var cpt = hh + tt + 5;
+                // var copyrightleft = parseInt( window.innerWidth / 2) - 200;
+                // document.getElementById("copyright2").style.left = copyrightleft + "px";
+                // var hh = document.getElementById("L3Area").offsetHeight;
+                // var tt = document.getElementById("L3Area").offsetTop;
+                // var cpt = hh + tt + 5;
 
-                document.getElementById("copyright2").style.position = "absolute";
-                document.getElementById("copyright2").style.display = "block";
-                document.getElementById("copyright2").style.top = cpt + "px";
-
-                checkbrowser();
+                // document.getElementById("copyright2").style.position = "absolute";
+                // document.getElementById("copyright2").style.display = "block";
+                // document.getElementById("copyright2").style.top = cpt + "px";
 
                 checkbrowser();
 
-                var closebuttleft = document.getElementById("L3Area").offsetLeft + document.getElementById("L3Area").offsetWidth + 5;
+                // checkbrowser();
 
-                document.getElementById("closebutton2").style.left = closebuttleft + "px";
-                document.getElementById("copybutton2").style.left = closebuttleft + "px";
-                document.getElementById("copybutton2").style.left = closebuttleft + "px";
-                document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
-                document.getElementById("excelbutton2").style.left = closebuttleft + "px";
-                document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
-                document.getElementById("prevbutton2").style.left = closebuttleft + "px";
+                // var closebuttleft = document.getElementById("L3Area").offsetLeft + document.getElementById("L3Area").offsetWidth + 5;
 
-                document.getElementById("closebutton2").style.top = document.getElementById("L3Area").style.top + "px";
-                document.getElementById("copybutton2").style.top = document.getElementById("L3Area").style.top + 25 + "px";
-                document.getElementById("copybutton2").style.top = document.getElementById("L3Area").style.top + 50 + "px";
-                document.getElementById("printbutton2").style.top = document.getElementById("L3Area").style.top + 75 + "px";
-                document.getElementById("excelbutton2").style.top = document.getElementById("L3Area").style.top + 100 + "px";
-                document.getElementById("downloadbutton2").style.top = document.getElementById("L3Area").style.top + 125 + "px";
-                document.getElementById("prevbutton2").style.top = document.getElementById("L3Area").style.top + 150 + "px";
+                // document.getElementById("closebutton2").style.left = closebuttleft + "px";
+                // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+                // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+                // document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
+                // document.getElementById("excelbutton2").style.left = closebuttleft + "px";
+                // document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
+                // document.getElementById("prevbutton2").style.left = closebuttleft + "px";
 
-                var hh = document.getElementById("L3Area").offsetHeight;
-                var tt = document.getElementById("L3Area").offsetTop;
-                var cpt = hh + tt + 5;
+                // document.getElementById("closebutton2").style.top = document.getElementById("L3Area").style.top + "px";
+                // document.getElementById("copybutton2").style.top = document.getElementById("L3Area").style.top + 25 + "px";
+                // document.getElementById("copybutton2").style.top = document.getElementById("L3Area").style.top + 50 + "px";
+                // document.getElementById("printbutton2").style.top = document.getElementById("L3Area").style.top + 75 + "px";
+                // document.getElementById("excelbutton2").style.top = document.getElementById("L3Area").style.top + 100 + "px";
+                // document.getElementById("downloadbutton2").style.top = document.getElementById("L3Area").style.top + 125 + "px";
+                // document.getElementById("prevbutton2").style.top = document.getElementById("L3Area").style.top + 150 + "px";
 
-                document.getElementById("copyright2").style.position = "absolute";
-                document.getElementById("copyright2").style.display = "block";
-                document.getElementById("copyright2").style.top = cpt + "px";
+                // var hh = document.getElementById("L3Area").offsetHeight;
+                // var tt = document.getElementById("L3Area").offsetTop;
+                // var cpt = hh + tt + 5;
+
+                // document.getElementById("copyright2").style.position = "absolute";
+                // document.getElementById("copyright2").style.display = "block";
+                // document.getElementById("copyright2").style.top = cpt + "px";
 
                 document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L2')");
                 document.getElementById("excelbutton2").setAttribute("onclick", "GenOverall_Excel_L3()");
@@ -1961,7 +2695,7 @@
         document.getElementById("L1Area").style.display = "none";
         document.getElementById("L2Area").style.display = "none";
         document.getElementById("L3Area").style.display = "none";
-        document.getElementById("L4Area").style.display = "inline-block";
+        document.getElementById("L4Area").style.display = "block";
 
         document.getElementById("downloadbutton2").style.display = "none";
 
@@ -2011,14 +2745,14 @@
                 
                 var txt1 = "<span style='font-family: Helvetica;font-size: 12px;font-weight:bold;color:red;'>Drill Down on Bet Type: " + BetType + ", User Name: " + SelectedUserName + ", Ticket No: " + TicketNo  + "</span><br>";
 
-                var txt = "<table style='font-size:12px;' cellpadding=0 cellspacing=0>";
-                txt = txt + "<tr >";
-                txt = txt + "<td class='cellborder'>Bet Type</td>";
-                txt = txt + "<td class='cellborder'>Bet Time</td>";
-                txt = txt + "<td class='cellborder'>Bet</td>";
-                txt = txt + "<td class='cellborder cellleft' >BetAmount</td>";
-                txt = txt + "<td class='cellborder cellleft' >Win/Loss</td>";
-                txt = txt + "</tr>";
+                var txt = "<table class='table table-striped table-bordered'>";
+                txt = txt + "<thead><tr>";
+                txt = txt + "<th class='cellborder'>Bet Type</th>";
+                txt = txt + "<th class='cellborder'>Bet Time</th>";
+                txt = txt + "<th class='cellborder'>Bet</th>";
+                txt = txt + "<th class='cellborder cellleft' >BetAmount</th>";
+                txt = txt + "<th class='cellborder cellleft' >Win/Loss</th>";
+                txt = txt + "</tr></thead>";
 
                 var Total_Recs = 0;
                 var Total_TOver = 0;
@@ -2097,44 +2831,44 @@
 
                 document.getElementById("L4Area").innerHTML = txt1 + txt;
 
-                var copyrightleft = parseInt( window.innerWidth / 2) - 200;
-                document.getElementById("copyright2").style.left = copyrightleft + "px";
-                var hh = document.getElementById("L4Area").offsetHeight;
-                var tt = document.getElementById("L4Area").offsetTop;
-                var cpt = hh + tt + 5;
+                // var copyrightleft = parseInt( window.innerWidth / 2) - 200;
+                // document.getElementById("copyright2").style.left = copyrightleft + "px";
+                // var hh = document.getElementById("L4Area").offsetHeight;
+                // var tt = document.getElementById("L4Area").offsetTop;
+                // var cpt = hh + tt + 5;
 
-                document.getElementById("copyright2").style.position = "absolute";
-                document.getElementById("copyright2").style.display = "block";
-                document.getElementById("copyright2").style.top = cpt + "px";
+                // document.getElementById("copyright2").style.position = "absolute";
+                // document.getElementById("copyright2").style.display = "block";
+                // document.getElementById("copyright2").style.top = cpt + "px";
 
 
                 checkbrowser();
 
-                var closebuttleft = document.getElementById("L4Area").offsetLeft + document.getElementById("L4Area").offsetWidth + 5;
+                // var closebuttleft = document.getElementById("L4Area").offsetLeft + document.getElementById("L4Area").offsetWidth + 5;
 
-                document.getElementById("closebutton2").style.left = closebuttleft + "px";
-                document.getElementById("copybutton2").style.left = closebuttleft + "px";
-                document.getElementById("copybutton2").style.left = closebuttleft + "px";
-                document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
-                document.getElementById("excelbutton2").style.left = closebuttleft + "px";
-                document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
-                document.getElementById("prevbutton2").style.left = closebuttleft + "px";
+                // document.getElementById("closebutton2").style.left = closebuttleft + "px";
+                // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+                // document.getElementById("copybutton2").style.left = closebuttleft + "px";
+                // document.getElementById("printbutton2").style.left = closebuttleft + "px"; 
+                // document.getElementById("excelbutton2").style.left = closebuttleft + "px";
+                // document.getElementById("downloadbutton2").style.left = closebuttleft + "px";
+                // document.getElementById("prevbutton2").style.left = closebuttleft + "px";
 
-                document.getElementById("closebutton2").style.top = document.getElementById("L4Area").style.top + "px";
-                document.getElementById("copybutton2").style.top = document.getElementById("L4Area").style.top + 25 + "px";
-                document.getElementById("copybutton2").style.top = document.getElementById("L4Area").style.top + 50 + "px";
-                document.getElementById("printbutton2").style.top = document.getElementById("L4Area").style.top + 75 + "px";
-                document.getElementById("excelbutton2").style.top = document.getElementById("L4Area").style.top + 100 + "px";
-                document.getElementById("downloadbutton2").style.top = document.getElementById("L4Area").style.top + 125 + "px";
-                document.getElementById("prevbutton2").style.top = document.getElementById("L4Area").style.top + 150 + "px";
+                // document.getElementById("closebutton2").style.top = document.getElementById("L4Area").style.top + "px";
+                // document.getElementById("copybutton2").style.top = document.getElementById("L4Area").style.top + 25 + "px";
+                // document.getElementById("copybutton2").style.top = document.getElementById("L4Area").style.top + 50 + "px";
+                // document.getElementById("printbutton2").style.top = document.getElementById("L4Area").style.top + 75 + "px";
+                // document.getElementById("excelbutton2").style.top = document.getElementById("L4Area").style.top + 100 + "px";
+                // document.getElementById("downloadbutton2").style.top = document.getElementById("L4Area").style.top + 125 + "px";
+                // document.getElementById("prevbutton2").style.top = document.getElementById("L4Area").style.top + 150 + "px";
 
-                var hh = document.getElementById("L4Area").offsetHeight;
-                var tt = document.getElementById("L4Area").offsetTop;
-                var cpt = hh + tt + 5;
+                // var hh = document.getElementById("L4Area").offsetHeight;
+                // var tt = document.getElementById("L4Area").offsetTop;
+                // var cpt = hh + tt + 5;
 
-                document.getElementById("copyright2").style.position = "absolute";
-                document.getElementById("copyright2").style.display = "block";
-                document.getElementById("copyright2").style.top = cpt + "px";
+                // document.getElementById("copyright2").style.position = "absolute";
+                // document.getElementById("copyright2").style.display = "block";
+                // document.getElementById("copyright2").style.top = cpt + "px";
                 
                 document.getElementById('prevbutton2').setAttribute("onclick", "showArea('L3')");
                 document.getElementById("excelbutton2").setAttribute("onclick", "GenOverall_Excel_L4()");
@@ -2331,13 +3065,468 @@
   <script>
     function showTime()
     {
-        alert($('#appt-time').val() + " to " + $('#appt-time2').val());
+        // alert($('#appt-time').val() + " to " + $('#appt-time2').val());
+    }
+  </script>
+
+  <script>
+    function GetLotteryTypes(ds, de){
+      checkbrowser();
+
+      // alert("Current List Items: " + objsLottery.length);
+      if (objsLottery.length != 0) {
+        objsLottery.length = 0;
+      }
+      // alert("Current List Items: " + objsLottery.length);
+
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetLotteryTypeSummaryLevelV2",
+            data: JSON.stringify({ "dateStart": ds, "dateEnd": de }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              var maxcount = response.length;
+              // var confirmtext = "Are you sure you want to proceed with " +  response.length + " records?"
+              // if (confirm(confirmtext)) {
+              //   // Save it!
+              //   console.log('Report proceed.');
+              // } else {
+              //   // Do nothing!
+              //   return;
+              // }
+              // alert("Success with: " + maxcount);
+
+              for (let i = 0; i < response.length; i++) {
+                var r = response[i];
+                var robj = {};
+                robj.LotteryTypeID = r.LotteryTypeID;
+                // robj.LotteryInfoID = 0;
+                robj.LotteryTypeName = r.LotteryTypeName;
+                robj.TOVer = r.TOver;
+                robj.Pending =  r.Pending;
+                robj.AllLost =  0;
+                robj.All4dWin =  0;
+                robj.Allnon4dWin =  0;
+                robj.WL =  r.Member_WL;
+                robj.Agent_WL =  r.Agent_WL;
+                robj.Com_WL =  r.Com_WL;
+                objsLottery.push(robj);
+              }
+
+              var txt = "<table class='table table-striped table-bordered'>";
+              txt = txt + "<thead><tr>";
+              txt = txt + "<th class='boldcell cellborder'>LotteryTypeName</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>TOver</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>Pending</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>Member W/L</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>Agent W/L</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>Company W/L</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>MA W/L</th>" ;
+              txt = txt + "<th class='boldcell cellborder'>SM W/L</th>" ;
+              txt = txt + "</tr></thead><tbody>";
+              
+              var cellclass = "";
+
+              var ttTOver = 0;
+              var ttPending = 0;
+              var ttWL = 0;
+              var TotalAgentWL = 0;
+              var TotalComWL = 0;
+              var TotalWinLose = 0;
+
+              for (let i = 0; i < objsLottery.length; i++) {
+                if ((i + 1) % 2 != 0) {
+                  cellclass = "cellgrey";
+                }
+                else
+                {
+                  cellclass = "";
+                }
+
+                var tis = objsLottery[i];
+                txt = txt + "<tr>";
+                // txt = txt + "<td>" + tis.LotteryTypeName + "</td>" ;
+                txt = txt + "<td class='celldata " + cellclass + "'><span class='bckPeal cellleft' style='font-weight:bold;' onclick='DrillBetTypeV2(this)' data-LotteryTypeID='" + tis.LotteryTypeID + "' data-BetType='" + tis.LotteryTypeName + "'>" + tis.LotteryTypeName + "</span>";
+                txt = txt + "<button style='float: right;'' onclick='GenOverall_Excel_L2_V3(this)' data-link='link_" + i + "' data-LotteryTypeID='" + tis.LotteryTypeID + "' data-BetType='" + tis.LotteryTypeName + "'>Excel</button>";
+                txt = txt + "<a id='link_" + i + "' target='_blank' href='' style='display:none;'>Download</a></td>"
+                txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.TOVer).toFixed(2)) + "</td>" ;
+                ttTOver = ttTOver + tis.TOVer;
+
+
+                txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.Pending).toFixed(2)) + "</td>" ;
+                ttPending = ttPending + tis.Pending;
+
+
+                if (Number(tis.WL).toFixed(2) < 0) {
+                  txt = txt + "<td class='celldata " + cellclass + " negativecell'>" + formatcomma(Number(tis.WL).toFixed(2)) + "</td>" ;  
+                }
+                else {
+                  txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.WL).toFixed(2)) + "</td>" ;
+                }
+                ttWL = ttWL + tis.WL;
+
+                if (Number(tis.Agent_WL).toFixed(2) < 0) {
+                  txt = txt + "<td class='celldata " + cellclass + " negativecell'>" + formatcomma(Number(tis.Agent_WL).toFixed(2)) + "</td>" ;  
+                }
+                else {
+                  txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.Agent_WL).toFixed(2)) + "</td>" ;
+                }
+                TotalAgentWL = TotalAgentWL + tis.Agent_WL;
+
+                if (Number(tis.Com_WL).toFixed(2) < 0) {
+                  txt = txt + "<td class='celldata " + cellclass + " negativecell'>" + formatcomma(Number(tis.Com_WL).toFixed(2)) + "</td>" ;  
+                }
+                else {
+                  txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.Com_WL).toFixed(2)) + "</td>" ;
+                }
+                TotalComWL = TotalComWL + tis.Com_WL;
+                
+                txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+                txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+                txt = txt + "</tr>";
+
+                // alert("Finish : " + i);
+              }
+
+              //----- displaying Total Line ----------------------------------------------
+              if (objsLottery.length % 2 != 0) {
+                cellclass = "cellgrey";
+              }
+              else {
+                cellclass = "";
+              }
+              txt = txt + "<tr>";
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>Total:</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(ttTOver).toFixed(2)) + "</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(ttPending).toFixed(2)) + "</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(ttWL).toFixed(2)) + "</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(TotalAgentWL).toFixed(2)) + "</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(TotalComWL).toFixed(2)) + "</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+              txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+              txt = txt + "</tr>";
+
+              txt = txt + "</tbody></table>";
+
+              // document.getElementById("jsonLottery").style = "display:none;";
+
+              // alert(document.getElementById("jsonLottery").style);
+              document.getElementById("L1Area").innerHTML = txt;
+              document.getElementById("jsondata").innerText = JSON.stringify(objsLottery);
+
+              document.getElementById("excelbutton2").setAttribute("onclick", "GenOverall_Excel_L1('List By Bet Types')");
+              document.getElementById("copybutton2").setAttribute("onclick", "CopyToClipboard('L1Area')"); // PrintContent
+              document.getElementById("printbutton2").setAttribute("onclick", "print('L1Area')");
+
+
+
+
+              checkbrowser();
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
+    }
+  </script>
+
+  <script>
+    // const objsLottery = [];
+
+    function GetCalcFields(DateStart, DateEnd, LotteryTypeID, myidx, objList, max) {
+      // alert(max);
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetCalculatedFields",
+            data: JSON.stringify({ "dateStart": DateStart.toString(), "dateEnd": DateEnd.toString(), "LotteryTypeID": LotteryTypeID.toString() }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              objList.WL = response.WL;
+              objList.TOVer = response.TOVer;
+              objList.Pending =  response.Pending;
+              objList.AllLost = response.AllLost;
+              objList.All4dWin =  response.All4dWin;
+              objList.Allnon4dWin = response.Allnon4dWin;
+              objList.Agent_WL =  response.Agent_WL;
+              objList.Com_WL =  response.Com_WL;      
+              objsLottery.push(objList);
+              document.getElementById("jsonLottery").innerText = JSON.stringify(objsLottery);
+              // alert("Current Items: " + objsLottery.length);
+
+              if (myidx == max - 1) {
+                // alert("I am reaching the bottom");
+                // alert(document.getElementById("jsonLottery").innerText);
+                document.getElementById("L1Area").innerHTML = "";
+                readList();
+              }
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+      });
+
+      
+    }
+  </script>
+
+  <script>
+    function GetMPlayerBetInfo(myid) {
+      var mylid = myid;
+
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetMPlayerBetInfo",
+            data: JSON.stringify({ "dateStart": mylid, "dateEnd": "" }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              return response;
+
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
+    }
+  </script>
+
+  <script>
+    function GetBetTrans(myid) {
+      var mylid = myid;
+      var myname = "";
+      var myticket = "";
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/GetMPlayerBetInfo",
+            data: JSON.stringify({ "dateStart": mylid, "dateEnd": "" }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              myname = response.Username;
+              myticket = response.Bill_No_Ticket;
+
+              console.log("From Ajax: " + myname);
+              var f1 = "_f1_" + myid + "";
+              f1 = f1.replaceAll("'", "");
+              console.log("My id: " + f1);
+              document.getElementById(f1).innerHTML = myname;
+
+              var f2 = "_f2_" + myid + "";
+              f2 = f2.replaceAll("'", "");
+              document.getElementById(f2).innerHTML = myticket;
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
+    }
+  </script>
+
+  <script>
+    // const objsLottery = [];
+
+    function testClass() {
+      // alert("testing class");
+      var StartDate = document.getElementById("dtDateS").value;
+      var EndDate = document.getElementById("dtDateE").value;
+
+      var StartTime = $('#appt-time').val();
+      var EndTime = $('#appt-time2').val();
+
+      if (StartTime == "") {
+        StartTime = "00:00:00";
+      }
+
+      if (EndTime == "") {
+        EndTime = "23:59:59";
+      }
+
+      StartDate = StartDate + " " + StartTime;
+      EndDate = EndDate + " " + EndTime;
+
+      var ds = StartDate;
+      var de = EndDate;
+
+      // alert("Before I go: \n" + ds + "\n" + de);
+
+      document.getElementById("L1Area").innerHTML = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("jsonLottery").innerText = "";
+      // objsLottery = [];
+      GetLotteryTypes(ds, de);
+
+      console.log(document.getElementById("jsonLottery").innerText);
+    }
+  </script>
+
+  <script>
+    function readList(){
+      // GenOverallReport();
+
+      checkbrowser();
+  
+
+      var mylist = JSON.parse(document.getElementById("jsonLottery").innerText);
+
+      mylist.sort(function(c, d){
+        
+          let x = c.LotteryTypeName.toLowerCase();
+          let y = d.LotteryTypeName.toLowerCase();
+          if (x < y) {return -1;}
+          if (x > y) {return 1;}
+
+          return 0;
+      });
+
+      var txt = "<table class='table table-striped table-bordered'>";
+      txt = txt + "<thead><tr>";
+      txt = txt + "<th class='boldcell cellborder'>LotteryTypeName</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>TOver</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>Pending</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>Member W/L</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>Agent W/L</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>Company W/L</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>MA W/L</th>" ;
+      txt = txt + "<th class='boldcell cellborder'>SM W/L</th>" ;
+      txt = txt + "</tr></thead><tbody>";
+      
+      var cellclass = "";
+
+      var ttTOver = 0;
+      var ttPending = 0;
+      var ttWL = 0;
+      var TotalAgentWL = 0;
+      var TotalComWL = 0;
+      var TotalWinLose = 0;
+
+      for (let i = 0; i < mylist.length; i++) {
+        if ((i + 1) % 2 != 0) {
+          cellclass = "cellgrey";
+        }
+        else
+        {
+          cellclass = "";
+        }
+
+        var tis = mylist[i];
+        txt = txt + "<tr>";
+        // txt = txt + "<td>" + tis.LotteryTypeName + "</td>" ;
+        txt = txt + "<td class='celldata " + cellclass + "'><span class='bckPeal cellleft' style='font-weight:bold;' onclick='DrillBetTypeV2(this)' data-LotteryTypeID='" + tis.LotteryTypeID + "' data-BetType='" + tis.LotteryTypeName + "'>" + tis.LotteryTypeName + "</span>";
+        txt = txt + "<button style='float: right;'' onclick='GenOverall_Excel_L2_V3(this)' data-link='link_" + i + "' data-LotteryTypeID='" + tis.LotteryTypeID + "' data-BetType='" + tis.LotteryTypeName + "'>Excel</button>";
+        txt = txt + "<a id='link_" + i + "' target='_blank' href='' style='display:none;'>Download</a></td>"
+        txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.TOVer).toFixed(2)) + "</td>" ;
+        ttTOver = ttTOver + tis.TOVer;
+
+
+        txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.Pending).toFixed(2)) + "</td>" ;
+        ttPending = ttPending + tis.Pending;
+
+
+        if (Number(tis.WL).toFixed(2) < 0) {
+          txt = txt + "<td class='celldata " + cellclass + " negativecell'>" + formatcomma(Number(tis.WL).toFixed(2)) + "</td>" ;  
+        }
+        else {
+          txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.WL).toFixed(2)) + "</td>" ;
+        }
+        ttWL = ttWL + tis.WL;
+
+        if (Number(tis.Agent_WL).toFixed(2) < 0) {
+          txt = txt + "<td class='celldata " + cellclass + " negativecell'>" + formatcomma(Number(tis.Agent_WL).toFixed(2)) + "</td>" ;  
+        }
+        else {
+          txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.Agent_WL).toFixed(2)) + "</td>" ;
+        }
+        TotalAgentWL = TotalAgentWL + tis.Agent_WL;
+
+        if (Number(tis.Com_WL).toFixed(2) < 0) {
+          txt = txt + "<td class='celldata " + cellclass + " negativecell'>" + formatcomma(Number(tis.Com_WL).toFixed(2)) + "</td>" ;  
+        }
+        else {
+          txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number(tis.Com_WL).toFixed(2)) + "</td>" ;
+        }
+        TotalComWL = TotalComWL + tis.Com_WL;
+        
+        txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+        txt = txt + "<td class='celldata " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+        txt = txt + "</tr>";
+      }
+
+      //----- displaying Total Line ----------------------------------------------
+      if (mylist.length % 2 != 0) {
+        cellclass = "cellgrey";
+      }
+      else {
+        cellclass = "";
+      }
+      txt = txt + "<tr>";
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>Total:</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(ttTOver).toFixed(2)) + "</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(ttPending).toFixed(2)) + "</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(ttWL).toFixed(2)) + "</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(TotalAgentWL).toFixed(2)) + "</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number(TotalComWL).toFixed(2)) + "</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+      txt = txt + "<td class='boldcell sumcell " + cellclass + "'>" + formatcomma(Number("0.00").toFixed(2)) + "</td>" ;
+      txt = txt + "</tr>";
+
+      txt = txt + "</tbody></table>";
+
+      // document.getElementById("jsonLottery").style = "display:none;";
+
+      // alert(document.getElementById("jsonLottery").style);
+      document.getElementById("L1Area").innerHTML = txt;
+      checkbrowser();
+      // alert(txt);
+    }
+
+  </script>
+
+  <script>
+    function testReadText(){
+      alert("Read ready made text here");
+
+      $.ajax({
+            type: "POST",
+            url: "http://localhost:5106/Bet/ReadTextFile",
+            data: JSON.stringify({ "InputText": "" }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            success: function (response) {
+              // alert(response.ReturnText);
+              document.getElementById("L1Area").innerHTML = response.ReturnText;
+              checkbrowser();
+            },
+            failure: function (response) {
+                console.log("failure");
+            },
+            error: function (response, status) {
+                console.log("error");
+            }
+        });
     }
   </script>
 
 </head>
 <body>
-<div id="menuDiv" >
+<!-- <div id="menuDiv" >
   <span>Test</span>
 </div>
 
@@ -2352,26 +3541,125 @@
 
 <div id="myDIVx" data-viewstate="small">
   Search Condition
+</div> -->
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <h3 class="panel-title">SearchCondition</h3>
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 ">
+      <div class="row ">
+        <!-- <div class="col-md-4 col-sm-12 col-xs-12">
+            <label class="control-label" for="Customer:">{{ 'MemberManage_UserName' | translate }}:</label>
+            <input type="text" placeholder="" class="form-control input-md"
+                    ng-model="dataSource.searchCondition.UserName">
+        </div> -->
+
+        <div class="col-md-1 col-sm-12 col-xs-12">
+          <label class="mylabel">DateS</label><br>
+          <input id="dtDateS" type="date" placeholder="" class="form-control input-md" onchange="showdate()"><div ></div>
+          <input id="appt-time" type="time" name="appt-time" class="form-control input-md" step="2" />
+        </div>
+        <div class="col-md-1 col-sm-12 col-xs-12">
+          <label class="mylabel">DateE</label><br>
+          <input id="dtDateE" type="date" placeholder=""  class="form-control input-md">
+          <input id="appt-time2" type="time" name="appt-time2" class="form-control input-md" step="2" />
+        </div>
+        
+
+        <!-- <div class="col-md-2 col-sm-12 col-xs-12">
+          <div style="display: inline-block;">
+            <span id="today" class="daterange" onclick="getToday()">Today</span><div style="width:3px;display:inline-block;opacity: 0;"></div>
+            <span id="yesterday" class="daterange" onclick="getYesterday()">Yesterday</span><div style="width:3px;display:inline-block;opacity: 0;"></div>
+            <span id="7days" class="daterange" onclick="get7Days()">Last 7 Days</span><div style="width:3px;display:inline-block;opacity: 0;"></div>
+            <span id="14days" class="daterange" onclick="get14Days()">Last 14 Days</span><div style="width:3px;display:inline-block;opacity: 0;"></div>
+          </div>
+        </div> -->
+        <div class="col-md-3 col-sm-12 col-xs-12 p-0">
+          <div class="btn_area">
+            <label class="mylabel"></label><br>
+              <ul class="text-left">
+                  <li><input type="button" class="btn btn-default btn-block" value="Today"  onclick="getToday()"></li>
+                  <li>
+                      <input type="button" class="btn btn-default btn-block" value="Yesterday" onclick="getYesterday()">
+                  </li>
+                  <li>
+                      <input type="button" class="btn btn-default btn-block" value="Last 7 Days" onclick="get7Days()">
+                  </li>
+                  <li>
+                      <input type="button" class="btn btn-default btn-block" value="Last 14 Days" onclick="get14Days()">
+                  </li>
+                  <!-- <li><input type="button" class="btn btn-primary btn-block" value="Search" ng-click="search()"></li> -->
+              </ul>
+          </div>
+        </div>
+
+        <div class="col-md-2 col-sm-12 col-xs-12">
+          <label class="mylabel">Ticket</label><br>
+          <input type="text" id="selected_ticketx" class="form-control input-md">
+        </div>
+        <div class="col-md-2 col-sm-12 col-xs-12">
+          <label class="mylabel">Account</label><br>
+          <input type="text" id="selected_accountx" class="form-control input-md" >
+        </div>
+        <div class="col-md-2 col-sm-12 col-xs-12">
+          <label class="mylabel">Bet Type</label><br>
+          <input type="text" id="selected_BetTypex" class="form-control input-md">
+        </div>
+
+        <div class="col-md-2 col-sm-12 col-xs-12" style="float:right">
+          <div class="btn_area">
+            <label class="mylabel"></label><br>
+            <ul class="text-right" style="float:right;">
+                <!--<li name="showAdd">
+                    <input type="button" class="btn btn-primary btn-block" value="{{ 'Add' | translate }}" ng-if="dataSource.memberInfo.AgentLevelSCID === 31"
+                            ng-click="showAdd()" />
+                </li>-->
+                <li name="clear">
+                    <input type="button" class="btn btn-default btn-block" value="Clear" onclick="clearTextbox()"/>
+                </li>
+                <li name="search">
+                    <input type="button" class="btn btn-primary btn-block" value="Search" onclick="GenOverallReport()"/>
+                </li>
+                <li name="testtext">
+                    <input type="button" class="btn btn-primary btn-block" value="Testing" onclick="testReadText()"/>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-<a id="burgerlink" class="burger"><img onclick="hidemenu()" id="burgerimg" class="burger" src="http://localhost:5106/cross.png"></a>
-<div id="CheckingArea">.</div>
-<div id="L1Area" class="container-fluid col-md-12 col-md-12"></div>
-<div id="L2Area" class="container-fluid col-md-12 col-md-12"></div>
-<div id="L3Area" class="container-fluid col-md-12 col-md-12"></div>
-<div id="L4Area" class="container-fluid col-md-12 col-md-12"></div>
+<br>
 
 <button id="closebutton2" ><i class="fa fa-close"></i></button>
 <button id="copybutton2" ><i class="fa fa-clone" style="font-size:15px"></i></button>
 <button id="printbutton2" ><i class="fa fa-print" style="font-size:15px"></i></button>
 <button id="excelbutton2" ><i class="fa fa-file-excel-o" style="font-size:15px;color:green;"></i></button>
-<a id="downloadbutton2"><i class="fa fa-download" style="font-size:15px;color:red;"></i></i></a>
+<a id="downloadbutton2" href=""><i class="fa fa-download" style="font-size:15px;color:red;"></i></i></a>
 <button id="prevbutton2" ><i class="fa fa-mail-reply" style="font-size:15px;color:red"></i></i></button>
-<!-- <button id="prevbutton2" ><i class="fa-solid fa-backward" style="font-size:15px;color:red"></i></button> -->
-<div id="copyright2">
-    <span>Copyright © 2019 Malaysia Golden Hippo In Tw Inc. All rights reserved</span>
+
+<a id="burgerlink" class="burger"><img onclick="hidemenu()" id="burgerimg" class="burger" src="http://localhost:5106/cross.png"></a>
+<div id="CheckingArea">.</div>
+<div class="css_table">
+  <div id="L1Area" class="table-responsive" style="margin-top: 20px;"></div>
+  <div id="L2Area" class="table-responsive"></div>
+  <div id="L3Area" class="table-responsive"></div>
+  <div id="L4Area" class="table-responsive"></div>
 </div>
+
+<!-- <button id="closebutton2" ><i class="fa fa-close"></i></button>
+<button id="copybutton2" ><i class="fa fa-clone" style="font-size:15px"></i></button>
+<button id="printbutton2" ><i class="fa fa-print" style="font-size:15px"></i></button>
+<button id="excelbutton2" ><i class="fa fa-file-excel-o" style="font-size:15px;color:green;"></i></button>
+<a id="downloadbutton2"><i class="fa fa-download" style="font-size:15px;color:red;"></i></i></a>
+<button id="prevbutton2" ><i class="fa fa-mail-reply" style="font-size:15px;color:red"></i></i></button> -->
+<!-- <button id="prevbutton2" ><i class="fa-solid fa-backward" style="font-size:15px;color:red"></i></button> -->
+<!-- <div id="copyright2">
+    <span>Copyright © 2019 Malaysia Golden Hippo In Tw Inc. All rights reserved</span>
+</div> -->
 
 <div id="HiddenInfo">
   <input type="text" id="browsertype" value="">
@@ -2401,7 +3689,7 @@
 <div id="jsondataL4" style="display:none;"></div>
 <div id="specialtitle"></div>
 
-<div id="mySearchElements"  data-viewstate="small">
+<!-- <div id="mySearchElements"  data-viewstate="small">
   <div style="display: inline-block;">
     <label class="mylabel">DateS</label><br>
     <input id="dtDateS" type="date" placeholder="" class="datebox curlyborder" onchange="showdate()"><div style="width:8px;display:inline-block;opacity: 0;"></div>
@@ -2456,7 +3744,7 @@
       </td>
     </tr>
   </table>
-</div>
+</div> -->
 <!-- <a id="downloadlink2" href="" target="_blank" style="display:none;" download>
     <img src="http://localhost:5106/red_download.jpg" style="width:30px;height:30px;border-style: solid; border-width: 1px; border-color:grey;">
 </a>
@@ -2467,6 +3755,6 @@
 <div id="ReportJSON2"></div>
 <input type="text" id="TempPrice" value="" style='display:none;' /><input type="text" id="TempDiscPrice" value="" style='display:none;' /><input type="text" id="TempWinMoney" value="" style='display:none;' />
 
-
+<div id="jsonLottery" style="display:none"></div>
 </body>
 </html>

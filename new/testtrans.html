@@ -47,7 +47,7 @@
     function GetLotteryTypes(ds, de){
       $.ajax({
             type: "POST",
-            url: "http://localhost:5106/Bet/GetLotteryTypeSummaryLevel",
+            url: "http://103.209.157.30:5106/Bet/GetLotteryTypeSummaryLevel",
             data: JSON.stringify({ "dateStart": ds, "dateEnd": de }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -70,7 +70,7 @@
                 robj.Agent_WL =  0;
                 robj.Com_WL =  0;
 
-                GetCalcFields(ds, de, r.LotteryTypeID, i, robj);
+                GetCalcFields(ds, de, r.LotteryTypeID, i, robj, maxcount);
               }
 
               if (i == response.length - 1) {
@@ -95,7 +95,7 @@
       var ds = document.getElementById("dateStart").value;
       var de = document.getElementById("dateEnd").value;
 
-      document.getElementById("result").innerHTML = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("result").innerHTML = "<img src='http://103.209.157.30:5106/clock.gif' />";
 
       GetLotteryTypes(ds, de);
     }
@@ -240,10 +240,11 @@
   <script>
     let result = "";
 
-    function GetCalcFields(DateStart, DateEnd, LotteryTypeID, myidx, objList) {
+    function GetCalcFields(DateStart, DateEnd, LotteryTypeID, myidx, objList, max) {
+      alert(max);
       $.ajax({
             type: "POST",
-            url: "http://localhost:5106/Bet/GetCalculatedFields",
+            url: "http://103.209.157.30:5106/Bet/GetCalculatedFields",
             data: JSON.stringify({ "dateStart": DateStart.toString(), "dateEnd": DateEnd.toString(), "LotteryTypeID": LotteryTypeID.toString() }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -278,7 +279,7 @@
 
       $.ajax({
             type: "POST",
-            url: "http://localhost:5106/Bet/GetMPlayerBetInfo",
+            url: "http://103.209.157.30:5106/Bet/GetMPlayerBetInfo",
             data: JSON.stringify({ "dateStart": mylid, "dateEnd": "" }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -304,7 +305,7 @@
       var myticket = "";
       $.ajax({
             type: "POST",
-            url: "http://localhost:5106/Bet/GetMPlayerBetInfo",
+            url: "http://103.209.157.30:5106/Bet/GetMPlayerBetInfo",
             data: JSON.stringify({ "dateStart": mylid, "dateEnd": "" }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -339,7 +340,7 @@
       var ds = document.getElementById("dateStart").value;
       var de = document.getElementById("dateEnd").value;
 
-      document.getElementById("result").innerHTML = "<img src='http://localhost:5106/clock.gif' />";
+      document.getElementById("result").innerHTML = "<img src='http://103.209.157.30:5106/clock.gif' />";
       GetLotteryTypes(ds, de);
 
       console.log(document.getElementById("jsonLottery").innerText);
@@ -384,9 +385,6 @@
       document.getElementById("result").innerHTML = txt;
 
       alert(txt);
-
-
-      
     }
   </script>
 </head>
