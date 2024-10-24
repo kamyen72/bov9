@@ -9,11 +9,15 @@
     <script src="/app/Controllers/testDataTablesController.js"></script> <!-- Contains the controller -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    
+    <style type="text/css">
+        body {
+            font-size: 10px;
+        }
+    </style>
 </head>
-<body>
+<body ng-controller="testdtController">
     <h1>DataTables Example with Embedded JSON</h1>
-    <div id="myDivtest" style="width:100%;min-height: 800px; height: 800px;" ng-controller="testDataTablesController">
+    <div id="myDivtest" style="width:100%;min-height: 800px; height: 800px;" >
         <table id="myDataTable" class="display" data-table border="1" cellspacing="5" cellpadding="5" style="border: 1px solid black;">
             <thead>
                 <tr>
@@ -32,27 +36,7 @@
         </table>
 
         <script>
-            // Embed the JSON data directly
-            // $scope.dataSource = [];
-
             $(document).ready(function() {
-                // for (let i = 0; i < 200000; i++) {
-                //     var me = {}
-                //         me.ID = i;
-                //         me.name = "name-" + i;
-                //         me.position = "position-" + i;
-                //         me.office = "office-" + i;
-                //         me.age = "age-" + i;
-                //         me.start_date = "start_date-" + i;
-                //         me.salary = "salary-" + i;
-
-                //     $scope.dataSource.push(me);
-                // }
-
-                alert("Now, my records: " + $scope.dataSource.length);
-
-
-
                 $('#myDataTable').DataTable({
                     data: dataSource, // Use the embedded JSON data
                     columns: [
@@ -65,7 +49,10 @@
                         { data: 'salary' }
                     ],
                     pageLength: 10,
-                    lengthMenu: [[10, 100, 1000], [10, 100, 1000, -1]]
+                    lengthMenu: [
+                        [10, 100, 1000, -1], // Values for pagination options
+                        [10, 100, 1000, "All"] // Labels for those values
+                    ]
                 });
             });
 
